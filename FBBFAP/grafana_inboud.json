@@ -141,7 +141,7 @@
       },
       "gridPos": {
         "h": 7,
-        "w": 8,
+        "w": 11,
         "x": 0,
         "y": 10
       },
@@ -193,70 +193,6 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "#bfdf19",
-                "value": 0
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          }
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 7,
-        "w": 7,
-        "x": 8,
-        "y": 10
-      },
-      "id": 1,
-      "options": {
-        "colorMode": "value",
-        "graphMode": "area",
-        "justifyMode": "auto",
-        "orientation": "auto",
-        "percentChangeColorMode": "standard",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "fields": "",
-          "values": false
-        },
-        "showPercentChange": false,
-        "textMode": "auto",
-        "wideLayout": true
-      },
-      "pluginVersion": "12.3.0",
-      "targets": [
-        {
-          "editorMode": "code",
-          "expr": "sum({__name__=~\".*_api_requests_total\",status=\"success\"})",
-          "legendFormat": "__auto",
-          "range": true,
-          "refId": "A"
-        }
-      ],
-      "title": "Total Requests Success",
-      "type": "stat"
-    },
-    {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "cf4rmgzov4b28e"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "thresholds"
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
                 "color": "#F2495C",
                 "value": 0
               },
@@ -271,8 +207,8 @@
       },
       "gridPos": {
         "h": 7,
-        "w": 9,
-        "x": 15,
+        "w": 13,
+        "x": 11,
         "y": 10
       },
       "id": 2,
@@ -297,13 +233,13 @@
       "targets": [
         {
           "editorMode": "code",
-          "expr": "sum({__name__=~\".*_api_requests_total\",status=\"failed\"})",
+          "expr": "floor(sum(increase({__name__=~\".*_api_requests_total\", env=\"$env\", api=~\"$api\",status=\"failed\"}[$__range])))",
           "legendFormat": "__auto",
           "range": true,
           "refId": "A"
         }
       ],
-      "title": "Total request failed",
+      "title": "Total request failed on range",
       "type": "stat"
     },
     {
@@ -640,6 +576,86 @@
       "fieldConfig": {
         "defaults": {
           "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "align": "auto",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "footer": {
+              "reducers": []
+            },
+            "inspect": false
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "ms"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 7,
+        "w": 24,
+        "x": 0,
+        "y": 56
+      },
+      "id": 15,
+      "options": {
+        "cellHeight": "sm",
+        "showHeader": true,
+        "sortBy": [
+          {
+            "desc": true,
+            "displayName": "Trend #A"
+          }
+        ]
+      },
+      "pluginVersion": "12.3.0",
+      "targets": [
+        {
+          "editorMode": "code",
+          "expr": "topk(\r\n  5,\r\n  1000 *\r\n  (\r\n    sum by (api) (rate(fbbfap_api_request_duration_seconds_sum[$__range]))\r\n    /\r\n    sum by (api) (rate(fbbfap_api_request_duration_seconds_count[$__range]))\r\n  )\r\n)\r\n",
+          "legendFormat": "__auto",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "Top api request time",
+      "transformations": [
+        {
+          "id": "timeSeriesTable",
+          "options": {}
+        },
+        {
+          "id": "limit",
+          "options": {
+            "limitField": "5"
+          }
+        }
+      ],
+      "type": "table"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "cf4rmgzov4b28e"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
             "mode": "palette-classic"
           },
           "custom": {
@@ -714,7 +730,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 56
+        "y": 63
       },
       "id": 6,
       "options": {
@@ -810,7 +826,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 56
+        "y": 63
       },
       "id": 7,
       "options": {
@@ -932,7 +948,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 64
+        "y": 71
       },
       "id": 10,
       "options": {
@@ -1023,7 +1039,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 64
+        "y": 71
       },
       "id": 11,
       "options": {
@@ -1114,10 +1130,10 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 8,
-        "w": 12,
+        "h": 15,
+        "w": 24,
         "x": 0,
-        "y": 72
+        "y": 79
       },
       "id": 13,
       "options": {
@@ -1164,7 +1180,7 @@
           "expr": "histogram_quantile(0.99, sum(rate(fbbfap_api_request_duration_seconds_bucket[$__range])) by (le))\r\n",
           "hide": false,
           "instant": false,
-          "legendFormat": "p90",
+          "legendFormat": "p99",
           "range": true,
           "refId": "C"
         }
@@ -1224,9 +1240,9 @@
       },
       "gridPos": {
         "h": 8,
-        "w": 12,
-        "x": 12,
-        "y": 72
+        "w": 24,
+        "x": 0,
+        "y": 94
       },
       "id": 14,
       "options": {
@@ -1249,7 +1265,7 @@
           "refId": "A"
         }
       ],
-      "title": "Top slowest api",
+      "title": "Top slowest api latency P99",
       "transformations": [
         {
           "id": "timeSeriesTable",
@@ -1352,5 +1368,5 @@
   "timezone": "browser",
   "title": "inbound API   (app controller)",
   "uid": "adn2ls6",
-  "version": 46
+  "version": 58
 }
