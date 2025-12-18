@@ -24,46 +24,22 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "cf4rmgzov4b28e"
+        "uid": "${datasource}"
       },
       "fieldConfig": {
         "defaults": {
           "color": {
-            "mode": "palette-classic"
+            "mode": "thresholds"
           },
           "custom": {
-            "axisBorderShow": false,
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "barWidthFactor": 0.6,
-            "drawStyle": "line",
-            "fillOpacity": 0,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
+            "cellOptions": {
+              "type": "auto"
             },
-            "insertNulls": false,
-            "lineInterpolation": "linear",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
+            "filterable": false,
+            "footer": {
+              "reducers": []
             },
-            "showPoints": "auto",
-            "showValues": false,
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
+            "inspect": false
           },
           "mappings": [],
           "thresholds": {
@@ -78,9 +54,22 @@
                 "value": 80
               }
             ]
-          }
+          },
+          "unit": "short"
         },
-        "overrides": []
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "total"
+            },
+            "properties": [
+              {
+                "id": "custom.width"
+              }
+            ]
+          }
+        ]
       },
       "gridPos": {
         "h": 8,
@@ -88,32 +77,189 @@
         "x": 0,
         "y": 0
       },
-      "id": 13,
+      "id": 23,
       "options": {
-        "legend": {
-          "calcs": [],
-          "displayMode": "list",
-          "placement": "bottom",
-          "showLegend": true
-        },
-        "tooltip": {
-          "hideZeros": false,
-          "mode": "single",
-          "sort": "none"
-        }
+        "cellHeight": "sm",
+        "showHeader": true,
+        "sortBy": []
       },
       "pluginVersion": "12.3.0",
       "targets": [
         {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
           "editorMode": "code",
-          "expr": "sum(increase(http_client_requests_total[$__range]))",
-          "legendFormat": "__auto",
-          "range": true,
+          "exemplar": true,
+          "expr": "floor(\r\n  sum by(uri)(\r\n    increase(\r\n      http_client_requests_seconds_count{status=~\"2..\",uri=~\"$uri\"}[$__range]\r\n    )\r\n  )\r\n)\r\n",
+          "format": "table",
+          "instant": true,
+          "interval": "",
+          "legendFormat": "{{uri}}",
           "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "exemplar": true,
+          "expr": "floor(\r\n  sum by(uri)(\r\n    increase(\r\n      http_client_requests_seconds_count{status=~\"4..|5..\",uri=~\"$uri\"}[$__range]\r\n    )\r\n  )\r\n)\r",
+          "format": "table",
+          "hide": false,
+          "instant": true,
+          "interval": "",
+          "legendFormat": "{{uri}}",
+          "refId": "B"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "exemplar": true,
+          "expr": "floor(\r\n  sum by(uri)(\r\n    increase(\r\n      http_client_requests_seconds_count{uri=~\"$uri\"}[$__range]\r\n    )\r\n  )\r\n)\r",
+          "format": "table",
+          "hide": false,
+          "instant": true,
+          "interval": "",
+          "legendFormat": "{{uri}}",
+          "refId": "C"
         }
       ],
-      "title": "Total Request Rate",
-      "type": "timeseries"
+      "title": "Summary Request Count",
+      "transformations": [
+        {
+          "id": "seriesToColumns",
+          "options": {
+            "byField": "uri"
+          }
+        },
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "Time 1": true,
+              "Time 2": true,
+              "Time 3": true
+            },
+            "indexByName": {},
+            "renameByName": {
+              "Value #A": "success",
+              "Value #B": "failed",
+              "Value #C": "total"
+            }
+          }
+        }
+      ],
+      "type": "table"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${datasource}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "align": "auto",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "filterable": false,
+            "footer": {
+              "reducers": []
+            },
+            "inspect": false
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "ms"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 0
+      },
+      "id": 25,
+      "options": {
+        "cellHeight": "sm",
+        "showHeader": true
+      },
+      "pluginVersion": "12.3.0",
+      "targets": [
+        {
+          "exemplar": true,
+          "expr": "",
+          "format": "table",
+          "instant": true,
+          "interval": "",
+          "legendFormat": "{{uri}}",
+          "refId": "A"
+        },
+        {
+          "exemplar": true,
+          "expr": "",
+          "format": "table",
+          "hide": false,
+          "instant": true,
+          "interval": "",
+          "legendFormat": "{{uri}}",
+          "refId": "B"
+        },
+        {
+          "editorMode": "code",
+          "exemplar": true,
+          "expr": "1000* (sum by(uri)  (rate(http_client_requests_seconds_sum[$__range]))\r\n/\r\nsum by(uri)  (rate(http_client_requests_seconds_count[$__range])))",
+          "format": "table",
+          "hide": false,
+          "instant": true,
+          "interval": "",
+          "legendFormat": "{{uri}}",
+          "refId": "C"
+        }
+      ],
+      "title": "Average Request TIme",
+      "transformations": [
+        {
+          "id": "seriesToColumns",
+          "options": {
+            "byField": "uri"
+          }
+        },
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "Time": true
+            },
+            "indexByName": {},
+            "renameByName": {
+              "Value": "average"
+            }
+          }
+        }
+      ],
+      "type": "table"
     },
     {
       "datasource": {
@@ -182,6 +328,321 @@
         "w": 12,
         "x": 0,
         "y": 8
+      },
+      "id": 22,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.3.0",
+      "targets": [
+        {
+          "editorMode": "code",
+          "expr": "1000* (sum by(uri)  (rate(http_client_requests_seconds_sum[$__range]))\r\n/\r\nsum by(uri)  (rate(http_client_requests_seconds_count[$__range])))",
+          "legendFormat": "__auto",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "average time request uri",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "cf4rmgzov4b28e"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 9,
+        "x": 0,
+        "y": 16
+      },
+      "id": 13,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.3.0",
+      "targets": [
+        {
+          "editorMode": "code",
+          "expr": "floor(sum(increase(http_client_requests_total[$__range])))",
+          "legendFormat": "__auto",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "Total Request",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "cf4rmgzov4b28e"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "red",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 8,
+        "x": 9,
+        "y": 16
+      },
+      "id": 21,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.3.0",
+      "targets": [
+        {
+          "editorMode": "code",
+          "expr": "floor(\r\n  sum(\r\n    increase(\r\n      http_client_requests_seconds_count{status=~\"4..|5..\"}[$__range]\r\n    )\r\n  )\r\n)\r\n",
+          "legendFormat": "__auto",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "total failed requests ",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "cf4rmgzov4b28e"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "showValues": false,
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 24
+      },
+      "id": 20,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.3.0",
+      "targets": [
+        {
+          "editorMode": "code",
+          "expr": "floor(sum by (uri )(increase(http_client_requests_seconds_count[$__range])))",
+          "legendFormat": "__auto",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "Total request by uri",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "cf4rmgzov4b28e"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "showValues": false,
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "ms"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 32
       },
       "id": 19,
       "options": {
@@ -264,7 +725,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 16
+        "y": 40
       },
       "id": 18,
       "options": {
@@ -372,7 +833,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 24
+        "y": 48
       },
       "id": 17,
       "options": {
@@ -466,7 +927,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 32
+        "y": 56
       },
       "id": 16,
       "options": {
@@ -486,7 +947,7 @@
       "targets": [
         {
           "editorMode": "code",
-          "expr": "100 *\r\n(\r\n  sum(\r\n    rate(http_client_requests_seconds_count{status=~\"2..\"}[$__range])\r\n  )\r\n)\r\n/\r\n(\r\n  sum(\r\n    rate(http_client_requests_seconds_count[$__range])\r\n  )\r\n)\r\n",
+          "expr": "100 *\r\n(\r\n  sum(\r\n    rate(http_client_requests_seconds_count{status=~\"2..\"}[$__rate_interval])\r\n  )\r\n)\r\n/\r\nclamp_min(\r\n  sum(\r\n    rate(http_client_requests_seconds_count[$__rate_interval])\r\n  ),\r\n  1\r\n)\r\n",
           "legendFormat": "__auto",
           "range": true,
           "refId": "A"
@@ -560,7 +1021,7 @@
         "h": 12,
         "w": 24,
         "x": 0,
-        "y": 40
+        "y": 64
       },
       "id": 15,
       "options": {
@@ -652,7 +1113,7 @@
         "h": 11,
         "w": 24,
         "x": 0,
-        "y": 52
+        "y": 76
       },
       "id": 8,
       "options": {
@@ -679,7 +1140,7 @@
           "refId": "A"
         }
       ],
-      "title": "Error Rate by API",
+      "title": "Error Rate by uri",
       "type": "timeseries"
     },
     {
@@ -748,7 +1209,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 63
+        "y": 87
       },
       "id": 14,
       "options": {
@@ -796,13 +1257,29 @@
           },
           "mappings": []
         },
-        "overrides": []
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "500"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "yellow",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          }
+        ]
       },
       "gridPos": {
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 71
+        "y": 95
       },
       "id": 12,
       "options": {
@@ -904,7 +1381,7 @@
         "h": 11,
         "w": 24,
         "x": 0,
-        "y": 79
+        "y": 103
       },
       "id": 10,
       "options": {
@@ -998,7 +1475,7 @@
         "h": 12,
         "w": 24,
         "x": 0,
-        "y": 90
+        "y": 114
       },
       "id": 7,
       "options": {
@@ -1092,7 +1569,7 @@
         "h": 11,
         "w": 24,
         "x": 0,
-        "y": 102
+        "y": 126
       },
       "id": 6,
       "options": {
@@ -1186,7 +1663,7 @@
         "h": 11,
         "w": 24,
         "x": 0,
-        "y": 113
+        "y": 137
       },
       "id": 5,
       "options": {
@@ -1306,7 +1783,7 @@
         "h": 10,
         "w": 24,
         "x": 0,
-        "y": 124
+        "y": 148
       },
       "id": 2,
       "options": {
@@ -1416,7 +1893,7 @@
         "h": 8,
         "w": 24,
         "x": 0,
-        "y": 134
+        "y": 158
       },
       "id": 1,
       "options": {
@@ -1471,14 +1948,34 @@
       },
       {
         "current": {
-          "text": "/fbbfap/api/metric",
-          "value": "/fbbfap/api/metric"
+          "text": "fbbfap",
+          "value": "fbbfap"
+        },
+        "definition": "label_values(http_client_requests_seconds_count,application)",
+        "label": "app",
+        "name": "app",
+        "options": [],
+        "query": {
+          "qryType": 1,
+          "query": "label_values(http_client_requests_seconds_count,application)",
+          "refId": "PrometheusVariableQueryEditor-VariableQuery"
+        },
+        "refresh": 1,
+        "regex": "",
+        "type": "query"
+      },
+      {
+        "current": {
+          "text": "All",
+          "value": [
+            "$__all"
+          ]
         },
         "datasource": "$datasource",
         "definition": "label_values(http_client_requests_seconds_count,uri)",
         "includeAll": true,
         "multi": true,
-        "name": "URI",
+        "name": "uri",
         "options": [],
         "query": {
           "qryType": 1,
@@ -1509,41 +2006,16 @@
         "refresh": 2,
         "sort": 1,
         "type": "query"
-      },
-      {
-        "current": {
-          "text": "All",
-          "value": [
-            "$__all"
-          ]
-        },
-        "datasource": {
-          "type": "prometheus",
-          "uid": "${datasource}"
-        },
-        "definition": "label_values({__name__=~\".*Controller_api_requests_total\"}, __name__)",
-        "includeAll": true,
-        "multi": true,
-        "name": "controller",
-        "options": [],
-        "query": {
-          "qryType": 1,
-          "query": "label_values({__name__=~\".*Controller_api_requests_total\"}, __name__)",
-          "refId": "PrometheusVariableQueryEditor-VariableQuery"
-        },
-        "refresh": 1,
-        "regex": "",
-        "type": "query"
       }
     ]
   },
   "time": {
-    "from": "now-6h",
+    "from": "now-12h",
     "to": "now"
   },
   "timepicker": {},
   "timezone": "browser",
   "title": "outbound api (httpclient)",
   "uid": "ad742v6",
-  "version": 51
+  "version": 76
 }
