@@ -22,6 +22,248 @@
   "links": [],
   "panels": [
     {
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "cellOptions": {
+              "type": "auto"
+            },
+            "filterable": false,
+            "footer": {
+              "reducers": []
+            },
+            "inspect": false
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "ms"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "api"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 292
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 0
+      },
+      "id": 4,
+      "options": {
+        "cellHeight": "sm",
+        "showHeader": true,
+        "sortBy": []
+      },
+      "pluginVersion": "12.3.0",
+      "targets": [
+        {
+          "exemplar": true,
+          "expr": "1000 *\r\nhistogram_quantile(\r\n  0.01,\r\n  sum by (le, api) (\r\n    rate(fbbfap_api_request_duration_seconds_bucket[$__range])\r\n  )\r\n)\r\n",
+          "format": "table",
+          "instant": true,
+          "interval": "",
+          "legendFormat": "{{api}}",
+          "refId": "A"
+        },
+        {
+          "exemplar": true,
+          "expr": "1000 *\r\nmax by (api) (\r\n  histogram_quantile(\r\n    1,\r\n    sum by (le, api) (\r\n      rate(fbbfap_api_request_duration_seconds_bucket[$__range])\r\n    )\r\n  )\r\n)\r\n",
+          "format": "table",
+          "hide": false,
+          "instant": true,
+          "interval": "",
+          "legendFormat": "{{api}}",
+          "refId": "B"
+        },
+        {
+          "exemplar": true,
+          "expr": "1000* (sum by (api) (rate(fbbfap_api_request_duration_seconds_sum[$__range]))\r\n/\r\nsum by (api) (rate(fbbfap_api_request_duration_seconds_count[$__range])))",
+          "format": "table",
+          "hide": false,
+          "instant": true,
+          "interval": "",
+          "legendFormat": "{{api}}",
+          "refId": "C"
+        }
+      ],
+      "title": "Summary Request Time",
+      "transformations": [
+        {
+          "id": "seriesToColumns",
+          "options": {
+            "byField": "api"
+          }
+        },
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "Time 1": true,
+              "Time 2": true,
+              "Time 3": true
+            },
+            "indexByName": {},
+            "renameByName": {
+              "Value #A": "min",
+              "Value #B": "max",
+              "Value #C": "average"
+            }
+          }
+        }
+      ],
+      "type": "table"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${datasource}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "align": "auto",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "filterable": false,
+            "footer": {
+              "reducers": []
+            },
+            "inspect": false
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 24,
+        "x": 0,
+        "y": 8
+      },
+      "id": 16,
+      "options": {
+        "cellHeight": "sm",
+        "showHeader": true
+      },
+      "pluginVersion": "12.3.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "editorMode": "code",
+          "exemplar": true,
+          "expr": "floor(\r\n  sum by (api) (\r\n    increase({__name__=~\".*_api_requests_total\", status=\"success\",api=~\"$api\"}[$__range])\r\n  )\r\n)\r\n",
+          "format": "table",
+          "instant": true,
+          "interval": "",
+          "legendFormat": "{{api}}",
+          "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "editorMode": "code",
+          "exemplar": true,
+          "expr": "floor(\r\n  sum by (api) (\r\n    increase({__name__=~\".*_api_requests_total\", status=\"failed\",api=~\"$api\"}[$__range])\r\n  )\r\n)\r\n",
+          "format": "table",
+          "hide": false,
+          "instant": true,
+          "interval": "",
+          "legendFormat": "{{api}}",
+          "refId": "B"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "editorMode": "code",
+          "exemplar": true,
+          "expr": "floor(\r\n  sum by (api) (\r\n    increase({__name__=~\".*_api_requests_total\",api=~\"$api\"}[$__range])\r\n  )\r\n)\r\n",
+          "format": "table",
+          "hide": false,
+          "instant": true,
+          "interval": "",
+          "legendFormat": "{{api}}",
+          "refId": "C"
+        }
+      ],
+      "title": "Panel Title",
+      "transformations": [
+        {
+          "id": "seriesToColumns",
+          "options": {
+            "byField": "api"
+          }
+        },
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "Time 1": true,
+              "Time 2": true,
+              "Time 3": true
+            },
+            "indexByName": {},
+            "renameByName": {
+              "Value #A": "success",
+              "Value #B": "failed",
+              "Value #C": "total",
+              "api": ""
+            }
+          }
+        }
+      ],
+      "type": "table"
+    },
+    {
       "datasource": "$datasource",
       "fieldConfig": {
         "defaults": {
@@ -49,7 +291,7 @@
         "h": 7,
         "w": 11,
         "x": 0,
-        "y": 0
+        "y": 17
       },
       "id": 8,
       "interval": "5m",
@@ -115,7 +357,7 @@
         "h": 7,
         "w": 13,
         "x": 11,
-        "y": 0
+        "y": 17
       },
       "id": 2,
       "options": {
@@ -253,7 +495,7 @@
         "h": 12,
         "w": 24,
         "x": 0,
-        "y": 7
+        "y": 24
       },
       "id": 3,
       "options": {
@@ -351,9 +593,9 @@
         "h": 11,
         "w": 24,
         "x": 0,
-        "y": 19
+        "y": 36
       },
-      "id": 4,
+      "id": 17,
       "options": {
         "legend": {
           "calcs": [],
@@ -445,7 +687,7 @@
         "h": 16,
         "w": 24,
         "x": 0,
-        "y": 30
+        "y": 47
       },
       "id": 5,
       "options": {
@@ -516,7 +758,7 @@
         "h": 7,
         "w": 24,
         "x": 0,
-        "y": 46
+        "y": 63
       },
       "id": 15,
       "options": {
@@ -636,7 +878,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 53
+        "y": 70
       },
       "id": 6,
       "options": {
@@ -732,7 +974,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 53
+        "y": 70
       },
       "id": 7,
       "options": {
@@ -854,7 +1096,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 61
+        "y": 78
       },
       "id": 10,
       "options": {
@@ -945,7 +1187,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 61
+        "y": 78
       },
       "id": 11,
       "options": {
@@ -1039,7 +1281,7 @@
         "h": 15,
         "w": 24,
         "x": 0,
-        "y": 69
+        "y": 86
       },
       "id": 13,
       "options": {
@@ -1148,7 +1390,7 @@
         "h": 8,
         "w": 24,
         "x": 0,
-        "y": 84
+        "y": 101
       },
       "id": 14,
       "options": {
@@ -1226,9 +1468,13 @@
       {
         "allValue": ".*",
         "current": {
-          "text": "All",
+          "text": [
+            "GET /fbb/account-profile/v1/config/condition",
+            "GET /fbb/account-profile/v1/config/condition/{id}"
+          ],
           "value": [
-            "$__all"
+            "GET /fbb/account-profile/v1/config/condition",
+            "GET /fbb/account-profile/v1/config/condition/{id}"
           ]
         },
         "datasource": "$datasource",
@@ -1244,12 +1490,12 @@
     ]
   },
   "time": {
-    "from": "now-3h",
+    "from": "now-6h",
     "to": "now"
   },
   "timepicker": {},
   "timezone": "browser",
   "title": "inbound API   (app controller)",
   "uid": "adn2ls6",
-  "version": 65
+  "version": 71
 }
