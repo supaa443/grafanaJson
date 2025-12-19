@@ -1,0 +1,98 @@
+{
+  "datasource": "Prometheus",
+  "fieldConfig": {
+    "defaults": {
+      "custom": {
+        "align": null,
+        "filterable": false
+      },
+      "thresholds": {
+        "mode": "absolute",
+        "steps": [
+          {
+            "color": "green",
+            "value": null
+          },
+          {
+            "color": "red",
+            "value": 80
+          }
+        ]
+      },
+      "mappings": [],
+      "color": {
+        "mode": "thresholds"
+      }
+    },
+    "overrides": []
+  },
+  "gridPos": {
+    "h": 9,
+    "w": 12,
+    "x": 12,
+    "y": 0
+  },
+  "id": 2,
+  "options": {
+    "showHeader": true
+  },
+  "pluginVersion": "7.5.17",
+  "targets": [
+    {
+      "exemplar": true,
+      "expr": "floor(\r\n  sum by (api) (\r\n    increase({__name__=~\".*_api_requests_total\", status=\"success\"}[$__range])\r\n  )\r\n)\r\n",
+      "format": "table",
+      "instant": true,
+      "interval": "",
+      "legendFormat": "{{api}}",
+      "refId": "A"
+    },
+    {
+      "exemplar": true,
+      "expr": "floor(\r\n  sum by (api) (\r\n    increase({__name__=~\".*_api_requests_total\", status=\"failed\"}[$__range])\r\n  )\r\n)\r\n",
+      "format": "table",
+      "hide": false,
+      "instant": true,
+      "interval": "",
+      "legendFormat": "{{api}}",
+      "refId": "B"
+    },
+    {
+      "exemplar": true,
+      "expr": "floor(\r\n  sum by (api) (\r\n    increase({__name__=~\".*_api_requests_total\"}[$__range])\r\n  )\r\n)\r\n",
+      "format": "table",
+      "hide": false,
+      "instant": true,
+      "interval": "",
+      "legendFormat": "{{api}}",
+      "refId": "C"
+    }
+  ],
+  "title": "Summary Request Count",
+  "transformations": [
+    {
+      "id": "seriesToColumns",
+      "options": {
+        "byField": "api"
+      }
+    },
+    {
+      "id": "organize",
+      "options": {
+        "excludeByName": {
+          "Time 1": true,
+          "Time 2": true,
+          "Time 3": true
+        },
+        "indexByName": {},
+        "renameByName": {
+          "Value #A": "success",
+          "Value #B": "failed",
+          "Value #C": "total",
+          "api": ""
+        }
+      }
+    }
+  ],
+  "type": "table"
+}

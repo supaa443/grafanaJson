@@ -22,12 +22,16 @@
   "links": [],
   "panels": [
     {
+      "datasource": {
+        "type": "prometheus"
+      },
       "fieldConfig": {
         "defaults": {
           "color": {
             "mode": "thresholds"
           },
           "custom": {
+            "align": "auto",
             "cellOptions": {
               "type": "auto"
             },
@@ -62,15 +66,27 @@
             "properties": [
               {
                 "id": "custom.width",
-                "value": 292
+                "value": 394
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "min"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 224
               }
             ]
           }
         ]
       },
       "gridPos": {
-        "h": 8,
-        "w": 12,
+        "h": 11,
+        "w": 24,
         "x": 0,
         "y": 0
       },
@@ -83,6 +99,7 @@
       "pluginVersion": "12.3.0",
       "targets": [
         {
+          "editorMode": "code",
           "exemplar": true,
           "expr": "1000 *\r\nhistogram_quantile(\r\n  0.01,\r\n  sum by (le, api) (\r\n    rate(fbbfap_api_request_duration_seconds_bucket[$__range])\r\n  )\r\n)\r\n",
           "format": "table",
@@ -92,6 +109,7 @@
           "refId": "A"
         },
         {
+          "editorMode": "code",
           "exemplar": true,
           "expr": "1000 *\r\nmax by (api) (\r\n  histogram_quantile(\r\n    1,\r\n    sum by (le, api) (\r\n      rate(fbbfap_api_request_duration_seconds_bucket[$__range])\r\n    )\r\n  )\r\n)\r\n",
           "format": "table",
@@ -102,6 +120,7 @@
           "refId": "B"
         },
         {
+          "editorMode": "code",
           "exemplar": true,
           "expr": "1000* (sum by (api) (rate(fbbfap_api_request_duration_seconds_sum[$__range]))\r\n/\r\nsum by (api) (rate(fbbfap_api_request_duration_seconds_count[$__range])))",
           "format": "table",
@@ -175,13 +194,38 @@
             ]
           }
         },
-        "overrides": []
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "api"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 379
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "total"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 231
+              }
+            ]
+          }
+        ]
       },
       "gridPos": {
         "h": 9,
         "w": 24,
         "x": 0,
-        "y": 8
+        "y": 11
       },
       "id": 16,
       "options": {
@@ -291,7 +335,7 @@
         "h": 7,
         "w": 11,
         "x": 0,
-        "y": 17
+        "y": 20
       },
       "id": 8,
       "interval": "5m",
@@ -357,7 +401,7 @@
         "h": 7,
         "w": 13,
         "x": 11,
-        "y": 17
+        "y": 20
       },
       "id": 2,
       "options": {
@@ -495,7 +539,7 @@
         "h": 12,
         "w": 24,
         "x": 0,
-        "y": 24
+        "y": 27
       },
       "id": 3,
       "options": {
@@ -593,7 +637,7 @@
         "h": 11,
         "w": 24,
         "x": 0,
-        "y": 36
+        "y": 39
       },
       "id": 17,
       "options": {
@@ -687,7 +731,7 @@
         "h": 16,
         "w": 24,
         "x": 0,
-        "y": 47
+        "y": 50
       },
       "id": 5,
       "options": {
@@ -758,7 +802,7 @@
         "h": 7,
         "w": 24,
         "x": 0,
-        "y": 63
+        "y": 66
       },
       "id": 15,
       "options": {
@@ -878,7 +922,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 70
+        "y": 73
       },
       "id": 6,
       "options": {
@@ -974,7 +1018,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 70
+        "y": 73
       },
       "id": 7,
       "options": {
@@ -1096,7 +1140,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 78
+        "y": 81
       },
       "id": 10,
       "options": {
@@ -1187,7 +1231,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 78
+        "y": 81
       },
       "id": 11,
       "options": {
@@ -1281,7 +1325,7 @@
         "h": 15,
         "w": 24,
         "x": 0,
-        "y": 86
+        "y": 89
       },
       "id": 13,
       "options": {
@@ -1339,6 +1383,708 @@
     {
       "datasource": {
         "type": "prometheus",
+        "uid": "${datasource}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "align": "auto",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "filterable": false,
+            "footer": {
+              "reducers": []
+            },
+            "inspect": false
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "#EAB839",
+                "value": 400
+              },
+              {
+                "color": "red",
+                "value": 500
+              }
+            ]
+          },
+          "unit": "none"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Method"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 80
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "URI"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 300
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Status"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 80
+              },
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "from": "",
+                    "id": 1,
+                    "text": "200",
+                    "to": "",
+                    "type": 1,
+                    "value": "200"
+                  },
+                  {
+                    "from": "",
+                    "id": 2,
+                    "text": "404",
+                    "to": "",
+                    "type": 1,
+                    "value": "404"
+                  },
+                  {
+                    "from": "",
+                    "id": 3,
+                    "text": "500",
+                    "to": "",
+                    "type": 1,
+                    "value": "500"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Min (ms)"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 100
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Avg (ms)"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 100
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Max (ms)"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 100
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Count"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 100
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "P95 (ms)"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 100
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "P99 (ms)"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 100
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 12,
+        "w": 24,
+        "x": 0,
+        "y": 104
+      },
+      "id": 27,
+      "options": {
+        "cellHeight": "sm",
+        "showHeader": true,
+        "sortBy": []
+      },
+      "pluginVersion": "12.3.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "editorMode": "code",
+          "exemplar": true,
+          "expr": "1000 *\r\n(\r\n  sum by (application, method, uri, status) (\r\n    rate(http_client_requests_seconds_sum{application=\"$application\",method=~\"$method\",uri=~\"$uri\"}[$__range])\r\n  )\r\n)\r\n/\r\n(\r\n  sum by (application, method, uri, status) (\r\n    rate(http_client_requests_seconds_count{application=\"$application\",method=~\"$method\",uri=~\"$uri\"}[$__range])\r\n  )\r\n)\r\n",
+          "format": "table",
+          "hide": false,
+          "instant": true,
+          "interval": "",
+          "legendFormat": "{{uri}}",
+          "range": false,
+          "refId": "Avg"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "editorMode": "code",
+          "exemplar": true,
+          "expr": "1000 *\r\nhistogram_quantile(\r\n  0.01,\r\n  sum by (le,application, method, uri, status) (\r\n rate(http_client_requests_seconds_bucket{application=\"$application\",method=~\"$method\",uri=~\"$uri\"}[$__range])\r\n  )\r\n)\r\n",
+          "format": "table",
+          "hide": false,
+          "instant": true,
+          "interval": "",
+          "legendFormat": "{{uri}}",
+          "range": false,
+          "refId": "Min"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "editorMode": "code",
+          "exemplar": true,
+          "expr": "1000 *\r\nmax by (application, method, uri, status) (\r\n  histogram_quantile(\r\n    1,\r\n    sum by (le, application, method, uri, status) (\r\n rate(http_client_requests_seconds_bucket{application=\"$application\",method=~\"$method\",uri=~\"$uri\"}[$__range])\r\n    )\r\n  )\r\n)\r\n",
+          "format": "table",
+          "hide": false,
+          "instant": true,
+          "interval": "",
+          "legendFormat": "__auto",
+          "range": false,
+          "refId": "Max"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "editorMode": "code",
+          "exemplar": true,
+          "expr": "1000 *\r\nhistogram_quantile(\r\n  0.50,\r\n  sum by (le, application, method, uri, status)(\r\n    rate(\r\n      http_client_requests_seconds_bucket{\r\n        application=\"$application\",\r\n        method=~\"$method\",\r\n        uri=~\"$uri\"\r\n      }[$__range]\r\n    )\r\n  )\r\n)\r",
+          "format": "table",
+          "hide": false,
+          "instant": true,
+          "interval": "",
+          "legendFormat": "__auto",
+          "range": false,
+          "refId": "P50"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "editorMode": "code",
+          "exemplar": true,
+          "expr": "1000 *\r\nhistogram_quantile(\r\n  0.95,\r\n  sum by (le, application, method, uri, status)(\r\n    rate(\r\n      http_client_requests_seconds_bucket{\r\n        application=\"$application\",\r\n        method=~\"$method\",\r\n        uri=~\"$uri\"\r\n      }[$__range]\r\n    )\r\n  )\r\n)\r\n",
+          "format": "table",
+          "hide": false,
+          "instant": true,
+          "interval": "",
+          "legendFormat": "__auto",
+          "range": false,
+          "refId": "P95"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "editorMode": "code",
+          "exemplar": true,
+          "expr": "1000 *\r\nhistogram_quantile(\r\n  0.99,\r\n  sum by (le, application, method, uri, status)(\r\n    rate(\r\n      http_client_requests_seconds_bucket{\r\n        application=\"$application\",\r\n        method=~\"$method\",\r\n        uri=~\"$uri\"\r\n      }[$__range]\r\n    )\r\n  )\r\n)\r\n",
+          "format": "table",
+          "hide": false,
+          "instant": true,
+          "interval": "",
+          "legendFormat": "__auto",
+          "range": false,
+          "refId": "P99"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "exemplar": true,
+          "expr": "floor(\r\n  sum by (application, method, uri, status)(\r\n    increase(\r\n      http_client_requests_seconds_count{\r\n        application=\"$application\",\r\n        method=~\"$method\",\r\n        uri=~\"$uri\"\r\n      }[$__range]\r\n    )\r\n  )\r\n)\r",
+          "format": "table",
+          "hide": false,
+          "instant": true,
+          "interval": "",
+          "legendFormat": "",
+          "refId": "Count"
+        }
+      ],
+      "title": "Summary HTTP Client Requests - Performance by Endpoint",
+      "transformations": [
+        {
+          "id": "merge",
+          "options": {}
+        },
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "Time": true,
+              "application": true
+            },
+            "indexByName": {
+              "Time": 0,
+              "Value #Avg": 6,
+              "Value #Count": 5,
+              "Value #Max": 8,
+              "Value #Min": 7,
+              "Value #P50": 9,
+              "Value #P95": 10,
+              "Value #P99": 11,
+              "application": 1,
+              "method": 2,
+              "status": 4,
+              "uri": 3
+            },
+            "renameByName": {
+              "Value": "",
+              "Value #Avg": "Avg (ms)",
+              "Value #Count": "Count",
+              "Value #Max": "Max (ms)",
+              "Value #Min": "Min (ms)",
+              "Value #P50": "P50(ms)",
+              "Value #P95": "P95 (ms)",
+              "Value #P99": "P99 (ms)",
+              "method": "Method",
+              "status": "Status",
+              "uri": "URI"
+            }
+          }
+        }
+      ],
+      "type": "table"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${datasource}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "align": "auto",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "filterable": false,
+            "footer": {
+              "reducers": []
+            },
+            "inspect": false
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "#EAB839",
+                "value": 400
+              },
+              {
+                "color": "red",
+                "value": 500
+              }
+            ]
+          },
+          "unit": "none"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Method"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 80
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "URI"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 300
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Status"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 80
+              },
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "from": "",
+                    "id": 1,
+                    "text": "200",
+                    "to": "",
+                    "type": 1,
+                    "value": "200"
+                  },
+                  {
+                    "from": "",
+                    "id": 2,
+                    "text": "404",
+                    "to": "",
+                    "type": 1,
+                    "value": "404"
+                  },
+                  {
+                    "from": "",
+                    "id": 3,
+                    "text": "500",
+                    "to": "",
+                    "type": 1,
+                    "value": "500"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Min (ms)"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 100
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Avg (ms)"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 100
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Max (ms)"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 100
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Count"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 100
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "P95 (ms)"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 100
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "P99 (ms)"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 100
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 12,
+        "w": 24,
+        "x": 0,
+        "y": 116
+      },
+      "id": 28,
+      "options": {
+        "cellHeight": "sm",
+        "showHeader": true,
+        "sortBy": []
+      },
+      "pluginVersion": "12.3.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "editorMode": "code",
+          "exemplar": true,
+          "expr": "1000 *\r\n(\r\n  sum by (application, method, uri, status) (\r\n    rate(http_client_requests_seconds_sum{application=\"$application\",method=~\"$method\",uri=~\"$uri\"}[$__range])\r\n  )\r\n)\r\n/\r\n(\r\n  sum by (application, method, uri, status) (\r\n    rate(http_client_requests_seconds_count{application=\"$application\",method=~\"$method\",uri=~\"$uri\"}[$__range])\r\n  )\r\n)\r\n",
+          "format": "table",
+          "hide": false,
+          "instant": true,
+          "interval": "",
+          "legendFormat": "{{uri}}",
+          "range": false,
+          "refId": "Avg"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "editorMode": "code",
+          "exemplar": true,
+          "expr": "1000 *\r\nhistogram_quantile(\r\n  0.01,\r\n  sum by (le,application, method, uri, status) (\r\n rate(http_client_requests_seconds_bucket{application=\"$application\",method=~\"$method\",uri=~\"$uri\"}[$__range])\r\n  )\r\n)\r\n",
+          "format": "table",
+          "hide": false,
+          "instant": true,
+          "interval": "",
+          "legendFormat": "{{uri}}",
+          "range": false,
+          "refId": "Min"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "editorMode": "code",
+          "exemplar": true,
+          "expr": "1000 *\r\nmax by (application, method, uri, status) (\r\n  histogram_quantile(\r\n    1,\r\n    sum by (le, application, method, uri, status) (\r\n rate(http_client_requests_seconds_bucket{application=\"$application\",method=~\"$method\",uri=~\"$uri\"}[$__range])\r\n    )\r\n  )\r\n)\r\n",
+          "format": "table",
+          "hide": false,
+          "instant": true,
+          "interval": "",
+          "legendFormat": "__auto",
+          "range": false,
+          "refId": "Max"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "editorMode": "code",
+          "exemplar": true,
+          "expr": "1000 *\r\nhistogram_quantile(\r\n  0.50,\r\n  sum by (le, application, method, uri, status)(\r\n    rate(\r\n      http_client_requests_seconds_bucket{\r\n        application=\"$application\",\r\n        method=~\"$method\",\r\n        uri=~\"$uri\"\r\n      }[$__range]\r\n    )\r\n  )\r\n)\r",
+          "format": "table",
+          "hide": false,
+          "instant": true,
+          "interval": "",
+          "legendFormat": "__auto",
+          "range": false,
+          "refId": "P50"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "editorMode": "code",
+          "exemplar": true,
+          "expr": "1000 *\r\nhistogram_quantile(\r\n  0.95,\r\n  sum by (le, application, method, uri, status)(\r\n    rate(\r\n      http_client_requests_seconds_bucket{\r\n        application=\"$application\",\r\n        method=~\"$method\",\r\n        uri=~\"$uri\"\r\n      }[$__range]\r\n    )\r\n  )\r\n)\r\n",
+          "format": "table",
+          "hide": false,
+          "instant": true,
+          "interval": "",
+          "legendFormat": "__auto",
+          "range": false,
+          "refId": "P95"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "editorMode": "code",
+          "exemplar": true,
+          "expr": "1000 *\r\nhistogram_quantile(\r\n  0.99,\r\n  sum by (le, application, method, uri, status)(\r\n    rate(\r\n      http_client_requests_seconds_bucket{\r\n        application=\"$application\",\r\n        method=~\"$method\",\r\n        uri=~\"$uri\"\r\n      }[$__range]\r\n    )\r\n  )\r\n)\r\n",
+          "format": "table",
+          "hide": false,
+          "instant": true,
+          "interval": "",
+          "legendFormat": "__auto",
+          "range": false,
+          "refId": "P99"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "exemplar": true,
+          "expr": "floor(\r\n  sum by (application, method, uri, status)(\r\n    increase(\r\n      http_client_requests_seconds_count{\r\n        application=\"$application\",\r\n        method=~\"$method\",\r\n        uri=~\"$uri\"\r\n      }[$__range]\r\n    )\r\n  )\r\n)\r",
+          "format": "table",
+          "hide": false,
+          "instant": true,
+          "interval": "",
+          "legendFormat": "",
+          "refId": "Count"
+        }
+      ],
+      "title": "Summary HTTP Client Requests - Performance by Endpoint",
+      "transformations": [
+        {
+          "id": "merge",
+          "options": {}
+        },
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "Time": true,
+              "application": true
+            },
+            "indexByName": {
+              "Time": 0,
+              "Value #Avg": 6,
+              "Value #Count": 5,
+              "Value #Max": 8,
+              "Value #Min": 7,
+              "Value #P50": 9,
+              "Value #P95": 10,
+              "Value #P99": 11,
+              "application": 1,
+              "method": 2,
+              "status": 4,
+              "uri": 3
+            },
+            "renameByName": {
+              "Value": "",
+              "Value #Avg": "Avg (ms)",
+              "Value #Count": "Count",
+              "Value #Max": "Max (ms)",
+              "Value #Min": "Min (ms)",
+              "Value #P50": "P50(ms)",
+              "Value #P95": "P95 (ms)",
+              "Value #P99": "P99 (ms)",
+              "method": "Method",
+              "status": "Status",
+              "uri": "URI"
+            }
+          }
+        }
+      ],
+      "type": "table"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
         "uid": "cf4rmgzov4b28e"
       },
       "fieldConfig": {
@@ -1390,7 +2136,7 @@
         "h": 8,
         "w": 24,
         "x": 0,
-        "y": 101
+        "y": 128
       },
       "id": 14,
       "options": {
@@ -1407,7 +2153,7 @@
       "targets": [
         {
           "editorMode": "code",
-          "expr": "topk(5, histogram_quantile(0.99, sum by (api, le)( rate(fbbfap_api_request_duration_seconds_bucket[$__range]) ) ) )",
+          "expr": "topk(5, histogram_quantile(0.99, sum by (api, le)( rate(fbbfap_api_request_duration_seconds_bucket{api=~\"$api\"}[$__range]))))",
           "legendFormat": "__auto",
           "range": true,
           "refId": "A"
@@ -1468,13 +2214,9 @@
       {
         "allValue": ".*",
         "current": {
-          "text": [
-            "GET /fbb/account-profile/v1/config/condition",
-            "GET /fbb/account-profile/v1/config/condition/{id}"
-          ],
+          "text": "All",
           "value": [
-            "GET /fbb/account-profile/v1/config/condition",
-            "GET /fbb/account-profile/v1/config/condition/{id}"
+            "$__all"
           ]
         },
         "datasource": "$datasource",
@@ -1497,5 +2239,5 @@
   "timezone": "browser",
   "title": "inbound API   (app controller)",
   "uid": "adn2ls6",
-  "version": 71
+  "version": 89
 }

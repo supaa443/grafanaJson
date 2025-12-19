@@ -1,0 +1,112 @@
+{
+  "fieldConfig": {
+    "defaults": {
+      "custom": {
+        "align": null,
+        "filterable": false
+      },
+      "thresholds": {
+        "mode": "absolute",
+        "steps": [
+          {
+            "color": "green",
+            "value": null
+          },
+          {
+            "color": "red",
+            "value": 80
+          }
+        ]
+      },
+      "mappings": [],
+      "color": {
+        "mode": "thresholds"
+      },
+      "unit": "ms"
+    },
+    "overrides": [
+      {
+        "matcher": {
+          "id": "byName",
+          "options": "api"
+        },
+        "properties": [
+          {
+            "id": "custom.width",
+            "value": 292
+          }
+        ]
+      }
+    ]
+  },
+  "gridPos": {
+    "h": 9,
+    "w": 12,
+    "x": 0,
+    "y": 0
+  },
+  "id": 4,
+  "options": {
+    "showHeader": true,
+    "sortBy": []
+  },
+  "pluginVersion": "7.5.17",
+  "targets": [
+    {
+      "exemplar": true,
+      "expr": "1000 *\r\nhistogram_quantile(\r\n  0.01,\r\n  sum by (le, api) (\r\n    rate(fbbfap_api_request_duration_seconds_bucket[$__range])\r\n  )\r\n)\r\n",
+      "format": "table",
+      "instant": true,
+      "interval": "",
+      "legendFormat": "{{api}}",
+      "refId": "A"
+    },
+    {
+      "exemplar": true,
+      "expr": "1000 *\r\nmax by (api) (\r\n  histogram_quantile(\r\n    1,\r\n    sum by (le, api) (\r\n      rate(fbbfap_api_request_duration_seconds_bucket[$__range])\r\n    )\r\n  )\r\n)\r\n",
+      "format": "table",
+      "hide": false,
+      "instant": true,
+      "interval": "",
+      "legendFormat": "{{api}}",
+      "refId": "B"
+    },
+    {
+      "exemplar": true,
+      "expr": "1000* (sum by (api) (rate(fbbfap_api_request_duration_seconds_sum[$__range]))\r\n/\r\nsum by (api) (rate(fbbfap_api_request_duration_seconds_count[$__range])))",
+      "format": "table",
+      "hide": false,
+      "instant": true,
+      "interval": "",
+      "legendFormat": "{{api}}",
+      "refId": "C"
+    }
+  ],
+  "title": "Summary Request Time",
+  "transformations": [
+    {
+      "id": "seriesToColumns",
+      "options": {
+        "byField": "api"
+      }
+    },
+    {
+      "id": "organize",
+      "options": {
+        "excludeByName": {
+          "Time 1": true,
+          "Time 2": true,
+          "Time 3": true
+        },
+        "indexByName": {},
+        "renameByName": {
+          "Value #A": "min",
+          "Value #B": "max",
+          "Value #C": "average"
+        }
+      }
+    }
+  ],
+  "type": "table",
+  "datasource": null
+}
