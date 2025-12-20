@@ -19,7 +19,7 @@
   "gnetId": null,
   "graphTooltip": 0,
   "id": 3,
-  "iteration": 1766218651932,
+  "iteration": 1766218988308,
   "links": [],
   "panels": [
     {
@@ -96,7 +96,7 @@
         {
           "editorMode": "code",
           "exemplar": true,
-          "expr": "clamp_min(\r\n  100 *\r\n  (\r\n    sum(rate(fbb_http_client_requests_seconds_count{status=~\"2..\",application=~\"$application\"}[1m]))\r\n    /\r\n    sum(rate(fbb_http_client_requests_seconds_count{application=~\"$application\"}[1m]))\r\n  ),\r\n  0\r\n)\n",
+          "expr": "clamp_min(\r\n  100 *\r\n  (\r\nsum(rate({__name__=~\".*_http_client_requests_seconds_count\",status=~\"2..\",application=~\"$application\"}[1m]))\r\n    /\r\n    sum(rate({__name__=~\".*_http_client_requests_seconds_count\",application=~\"$application\"}[1m]))\r\n  ),\r\n  0\r\n)\n",
           "interval": "",
           "legendFormat": "success rate",
           "range": true,
@@ -180,7 +180,7 @@
         {
           "editorMode": "code",
           "exemplar": true,
-          "expr": "100 *\r\n(\r\n  sum(\r\n    rate(fbb_http_client_requests_seconds_count{status=~\"2..\",application=~\"$application\"}[$__range])\r\n\r\n)\r\n/\r\r\n sum(\r\n    rate(fbb_http_client_requests_seconds_count{application=~\"$application\"}[$__range])\r\n  )\r\n\r\n)\n\n\r\n\r\r\r\n",
+          "expr": "100 *\r\n(\r\n  sum(\r\n    rate({__name__=~\".*_http_client_requests_seconds_count\",status=~\"2..\",application=~\"$application\"}[$__range])\r\n\r\n)\r\n/\r\r\n sum(\r\n    rate({__name__=~\".*_http_client_requests_seconds_count\",application=~\"$application\"}[$__range])\r\n  )\r\n\r\n)\n\n\r\n\r\r\r\n",
           "interval": "",
           "legendFormat": "success rate",
           "range": true,
@@ -2642,12 +2642,12 @@
     ]
   },
   "time": {
-    "from": "now-30m",
+    "from": "now-1h",
     "to": "now"
   },
   "timepicker": {},
   "timezone": "browser",
   "title": "outbound api (httpclient)",
   "uid": "ad742v6",
-  "version": 65
+  "version": 66
 }
