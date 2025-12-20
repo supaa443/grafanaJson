@@ -19,7 +19,7 @@
   "gnetId": null,
   "graphTooltip": 0,
   "id": 3,
-  "iteration": 1766139966449,
+  "iteration": 1766218651932,
   "links": [],
   "panels": [
     {
@@ -69,10 +69,94 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 12,
+        "h": 13,
         "w": 24,
         "x": 0,
         "y": 0
+      },
+      "id": 42,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        },
+        "tooltipOptions": {
+          "mode": "single"
+        }
+      },
+      "pluginVersion": "12.3.0",
+      "targets": [
+        {
+          "editorMode": "code",
+          "exemplar": true,
+          "expr": "clamp_min(\r\n  100 *\r\n  (\r\n    sum(rate(fbb_http_client_requests_seconds_count{status=~\"2..\",application=~\"$application\"}[1m]))\r\n    /\r\n    sum(rate(fbb_http_client_requests_seconds_count{application=~\"$application\"}[1m]))\r\n  ),\r\n  0\r\n)\n",
+          "interval": "",
+          "legendFormat": "success rate",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "Success Rate(Elapsed time )",
+      "type": "timeseries"
+    },
+    {
+      "datasource": "${datasource}",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "graph": false,
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 13,
+        "w": 24,
+        "x": 0,
+        "y": 13
       },
       "id": 16,
       "options": {
@@ -96,14 +180,14 @@
         {
           "editorMode": "code",
           "exemplar": true,
-          "expr": "100 *\r\n(\r\n  sum(\r\n    rate({__name__=~\".*_http_client_requests_seconds_count\", status=~\"2..\", application=~\"$application\"}[$__range])\r\n  )\r\n)\r\n/\r\n(\r\n  sum(\r\n    rate({__name__=~\".*_http_client_requests_seconds_count\", application=~\"$application\"}[$__range])\r\n  )\r\n)\r\n",
+          "expr": "100 *\r\n(\r\n  sum(\r\n    rate(fbb_http_client_requests_seconds_count{status=~\"2..\",application=~\"$application\"}[$__range])\r\n\r\n)\r\n/\r\r\n sum(\r\n    rate(fbb_http_client_requests_seconds_count{application=~\"$application\"}[$__range])\r\n  )\r\n\r\n)\n\n\r\n\r\r\r\n",
           "interval": "",
           "legendFormat": "success rate",
           "range": true,
           "refId": "A"
         }
       ],
-      "title": "Success Rate",
+      "title": "Success Rate (Last $__range)",
       "type": "timeseries"
     },
     {
@@ -156,7 +240,7 @@
         "h": 15,
         "w": 24,
         "x": 0,
-        "y": 12
+        "y": 26
       },
       "id": 17,
       "options": {
@@ -180,14 +264,100 @@
         {
           "editorMode": "code",
           "exemplar": true,
-          "expr": "100 *\r\n(\r\n  sum by (uri)(\r\n    rate({__name__=~\".*_http_client_requests_seconds_count\", status=~\"2..\", application=~\"$application\"}[$__range])\r\n  )\r\n)\r\n/\r\n(\r\n  sum by (uri)(\r\n    rate({__name__=~\".*_http_client_requests_seconds_count\", application=~\"$application\"}[$__range])\r\n  )\r\n)\r\n",
+          "expr": "clamp_min(\r\n  100 *\r\n  (\r\n    sum by (uri) (\r\n      rate({__name__=~\".*_http_client_requests_seconds_count\",\r\n            status=~\"2..\",\r\n            uri=~\"$uri\"}[$__range])\r\n    )\r\n  )\r\n  /\r\n  (\r\n    sum by (uri) (\r\n      rate({__name__=~\".*_http_client_requests_seconds_count\",\r\n            uri=~\"$uri\"}[$__range])\r\n    )\r\n  ),\r\n  0\r\n)\r\n",
+          "instant": false,
           "interval": "",
           "legendFormat": "{{uri}}",
           "range": true,
           "refId": "A"
         }
       ],
-      "title": "Success Rate by Uri",
+      "title": "Success Rate by Uri (Last $__range)",
+      "type": "timeseries"
+    },
+    {
+      "datasource": null,
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "graph": false,
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 15,
+        "w": 24,
+        "x": 0,
+        "y": 41
+      },
+      "id": 43,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        },
+        "tooltipOptions": {
+          "mode": "single"
+        }
+      },
+      "pluginVersion": "12.3.0",
+      "targets": [
+        {
+          "editorMode": "code",
+          "exemplar": true,
+          "expr": "clamp_min(\r\n  100 *\r\n  (\r\n    sum by (uri) (\r\n      rate({__name__=~\".*_http_client_requests_seconds_count\",\r\n            status=~\"2..\",\r\n            uri=~\"$uri\"}[1m])\r\n    )\r\n  )\r\n  /\r\n  (\r\n    sum by (uri) (\r\n      rate({__name__=~\".*_http_client_requests_seconds_count\",\r\n            uri=~\"$uri\"}[1m])\r\n    )\r\n  ),\r\n  0\r\n)\r\n",
+          "instant": false,
+          "interval": "",
+          "legendFormat": "{{uri}}",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "Success Rate by Uri (Elapsed time )",
       "type": "timeseries"
     },
     {
@@ -256,7 +426,7 @@
         "h": 12,
         "w": 24,
         "x": 0,
-        "y": 27
+        "y": 56
       },
       "id": 15,
       "options": {
@@ -280,99 +450,14 @@
         {
           "editorMode": "code",
           "exemplar": true,
-          "expr": "100 *\r\n(\r\n  sum(\r\n    rate({__name__=~\".*_http_client_requests_seconds_count\",status=~\"4..|5..\"}[$__range])\r\n  )\r\n)\r\n/\r\n(\r\n  sum(\r\n    rate({__name__=~\".*_http_client_requests_seconds_count\"}[$__range]\r\n  ))\r\n)\n\n\r\n\r",
+          "expr": "clamp_min(\n100 *\r\n(\r\n  sum(\r\n    rate({__name__=~\".*_http_client_requests_seconds_count\",status=~\"4..|5..\"}[1m])\r\n  )\r\n)\r\n/\r\n(\r\n  sum(\r\n    rate({__name__=~\".*_http_client_requests_seconds_count\"}[1m])\r\n  )\r\n),\n0\n)\r\n",
           "interval": "",
           "legendFormat": "error rate",
           "range": true,
           "refId": "A"
         }
       ],
-      "title": "Error Rate",
-      "type": "timeseries"
-    },
-    {
-      "datasource": "$datasource",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "drawStyle": "line",
-            "fillOpacity": 0,
-            "gradientMode": "none",
-            "hideFrom": {
-              "graph": false,
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "lineInterpolation": "linear",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "auto",
-            "spanNulls": true
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          },
-          "unit": "percent"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 11,
-        "w": 24,
-        "x": 0,
-        "y": 39
-      },
-      "id": 8,
-      "options": {
-        "legend": {
-          "calcs": [],
-          "displayMode": "list",
-          "placement": "bottom",
-          "showLegend": true
-        },
-        "tooltip": {
-          "hideZeros": false,
-          "mode": "single",
-          "sort": "none"
-        },
-        "tooltipOptions": {
-          "mode": "multi"
-        }
-      },
-      "pluginVersion": "12.3.0",
-      "targets": [
-        {
-          "editorMode": "code",
-          "exemplar": true,
-          "expr": "100 *\r\n(\r\n  sum by (uri)(\r\n    rate({__name__=~\".*_http_client_requests_seconds_count\",status=~\"4..|5..\"}[$__range])\r\n  )\r\n)\r\n/\r\n(\r\n  sum by (uri)(\r\n    rate({__name__=~\".*_http_client_requests_seconds_count\"}[$__range]\r\n  ))\r\n)\n\n\r\n\r",
-          "interval": "",
-          "legendFormat": "{{uri}}",
-          "range": true,
-          "refId": "A"
-        }
-      ],
-      "title": "Error Rate by uri",
+      "title": "Error Rate(Elapsed time )",
       "type": "timeseries"
     },
     {
@@ -417,18 +502,33 @@
                 "value": 80
               }
             ]
-          },
-          "unit": "ms"
+          }
         },
-        "overrides": []
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "error rate"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "red",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          }
+        ]
       },
       "gridPos": {
         "h": 12,
         "w": 24,
         "x": 0,
-        "y": 50
+        "y": 68
       },
-      "id": 19,
+      "id": 44,
       "options": {
         "legend": {
           "calcs": [],
@@ -450,14 +550,14 @@
         {
           "editorMode": "code",
           "exemplar": true,
-          "expr": "1000* (sum  (rate({__name__=~\".*_http_client_requests_seconds_sum\"}[$__range]))\r\n/\r\nsum  (rate({__name__=~\".*_http_client_requests_seconds_count\"}[$__range])))",
+          "expr": "clamp_min(\n100 *\r\n(\r\n  sum(\r\n    rate({__name__=~\".*_http_client_requests_seconds_count\",status=~\"4..|5..\"}[$__range])\r\n  )\r\n)\r\n/\r\n(\r\n  sum(\r\n    rate({__name__=~\".*_http_client_requests_seconds_count\"}[$__range])\r\n  )\r\n),\n0\r\n)",
           "interval": "",
-          "legendFormat": "average time request",
+          "legendFormat": "error rate",
           "range": true,
           "refId": "A"
         }
       ],
-      "title": "average time request(ms)",
+      "title": "Error Rate (Last $__range)",
       "type": "timeseries"
     },
     {
@@ -483,6 +583,205 @@
             "lineInterpolation": "linear",
             "lineWidth": 1,
             "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "error rate"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "red",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 12,
+        "w": 24,
+        "x": 0,
+        "y": 80
+      },
+      "id": 36,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        },
+        "tooltipOptions": {
+          "mode": "single"
+        }
+      },
+      "pluginVersion": "12.3.0",
+      "targets": [
+        {
+          "editorMode": "code",
+          "exemplar": true,
+          "expr": "clamp_min(\n100 *\r\n(\r\n  sum by(uri)(\r\n    rate({__name__=~\".*_http_client_requests_seconds_count\",status=~\"4..|5..\",uri=~\"$uri\"}[1m])\r\n  )\r\n)\r\n/\r\n(\r\n  sum by(uri)(\r\n    rate({__name__=~\".*_http_client_requests_seconds_count\",uri=~\"$uri\"}[1m])\r\n  )\r\n),\n0\r\n)",
+          "interval": "",
+          "legendFormat": "{{uri}}",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "Error Rate by Uri (Elapsed time )",
+      "type": "timeseries"
+    },
+    {
+      "datasource": "${datasource}",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "graph": false,
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "error rate"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "red",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 12,
+        "w": 24,
+        "x": 0,
+        "y": 92
+      },
+      "id": 45,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        },
+        "tooltipOptions": {
+          "mode": "single"
+        }
+      },
+      "pluginVersion": "12.3.0",
+      "targets": [
+        {
+          "editorMode": "code",
+          "exemplar": true,
+          "expr": "100 *\r\n(\r\n  sum by(uri)(\r\n    rate({__name__=~\".*_http_client_requests_seconds_count\",status=~\"4..|5..\",uri=~\"$uri\"}[$__range])\r\n  )\r\n)\r\n/\r\n(\r\n  sum by(uri)(\r\n    rate({__name__=~\".*_http_client_requests_seconds_count\",uri=~\"$uri\"}[$__range])\r\n  )\r\n)\r\n",
+          "interval": "",
+          "legendFormat": "{{uri}}",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "Error Rate by Uri (Last $__range)",
+      "type": "timeseries"
+    },
+    {
+      "datasource": "${datasource}",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "graph": false,
+              "legend": false,
+              "tooltip": false
+            },
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 1,
             "scaleDistribution": {
               "type": "linear"
             },
@@ -511,211 +810,31 @@
         "h": 13,
         "w": 24,
         "x": 0,
-        "y": 62
+        "y": 104
       },
-      "id": 14,
+      "id": 35,
       "options": {
+        "graph": {},
         "legend": {
           "calcs": [],
           "displayMode": "list",
-          "placement": "bottom",
-          "showLegend": true
-        },
-        "tooltip": {
-          "hideZeros": false,
-          "mode": "single",
-          "sort": "none"
+          "placement": "bottom"
         },
         "tooltipOptions": {
           "mode": "single"
         }
-      },
-      "pluginVersion": "12.3.0",
-      "targets": [
-        {
-          "editorMode": "code",
-          "exemplar": true,
-          "expr": "1000 *\r\n(\r\n  sum by (uri)(\r\n    rate({__name__=~\".*_http_client_requests_seconds_sum\", uri=~\"$uri\"}[$__range])\r\n  )\r\n)\r\n/\r\n(\r\n  sum by (uri)(\r\n    rate({__name__=~\".*_http_client_requests_seconds_count\", uri=~\"$uri\"}[$__range])\r\n  )\r\n)\r\n",
-          "interval": "",
-          "legendFormat": "{{uri}}",
-          "range": true,
-          "refId": "A"
-        }
-      ],
-      "title": "average time request  by uri",
-      "type": "timeseries"
-    },
-    {
-      "datasource": null,
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "thresholds"
-          },
-          "custom": {
-            "align": null,
-            "filterable": false
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          }
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 10,
-        "w": 24,
-        "x": 0,
-        "y": 75
-      },
-      "id": 31,
-      "options": {
-        "showHeader": true,
-        "sortBy": [
-          {
-            "desc": true,
-            "displayName": "P99 (ms)"
-          }
-        ]
       },
       "pluginVersion": "7.5.17",
       "targets": [
         {
           "exemplar": true,
-          "expr": "topk(\r\n  5,\r\n  histogram_quantile(\r\n    0.99,\r\n    sum by (le, method, uri, status)(\r\n      rate(\r\n        fbb_http_client_requests_seconds_bucket{\r\n          uri=~\"$uri\"\r\n        }[$__range]\r\n      )\r\n    )\r\n  ) * 1000\r\n)\r\n",
-          "format": "table",
-          "instant": true,
+          "expr": "histogram_quantile(\n  0.95,\n  sum by (le, uri)(\n    rate(\n      {__name__=~\".*_http_client_requests_seconds_bucket\",\n      uri=~\"$uri\"\n      }\n      [1m]\n    )\n  )\n) * 1000",
           "interval": "",
-          "legendFormat": "{{uri}}",
+          "legendFormat": "",
           "refId": "A"
         }
       ],
-      "title": "Summary Top 5 URI P99",
-      "transformations": [
-        {
-          "id": "organize",
-          "options": {
-            "excludeByName": {
-              "Time": true
-            },
-            "indexByName": {
-              "Time": 0,
-              "Value": 4,
-              "method": 2,
-              "status": 3,
-              "uri": 1
-            },
-            "renameByName": {
-              "Value": "P99 (ms)"
-            }
-          }
-        }
-      ],
-      "type": "table"
-    },
-    {
-      "datasource": "${datasource}",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "drawStyle": "line",
-            "fillOpacity": 0,
-            "gradientMode": "none",
-            "hideFrom": {
-              "graph": false,
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "lineInterpolation": "linear",
-            "lineStyle": {
-              "fill": "solid"
-            },
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "auto",
-            "spanNulls": false
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "red",
-                "value": 1000
-              }
-            ]
-          },
-          "unit": "ms"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 10,
-        "w": 24,
-        "x": 0,
-        "y": 85
-      },
-      "id": 29,
-      "options": {
-        "legend": {
-          "calcs": [],
-          "displayMode": "table",
-          "placement": "bottom",
-          "showLegend": true
-        },
-        "tooltip": {
-          "mode": "multi",
-          "sort": "desc"
-        },
-        "tooltipOptions": {
-          "mode": "single"
-        }
-      },
-      "pluginVersion": "10.0.0",
-      "targets": [
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
-          },
-          "editorMode": "code",
-          "exemplar": true,
-          "expr": "1000 *\r\nsum by (application, method, uri,status) (\r\n  rate(fbb_http_client_requests_seconds_sum{application=~\"$application\", method=~\"$method\", uri=~\"$uri\"}[$__range])\r\n)\r\n/\r\nsum by (application, method, uri,status) (\r\n  rate(fbb_http_client_requests_seconds_count{application=~\"$application\", method=~\"$method\", uri=~\"$uri\"}[$__range])\r\n)\r\n",
-          "format": "time_series",
-          "hide": false,
-          "instant": false,
-          "interval": "",
-          "legendFormat": "{{method}} {{uri}} ({{status}}) - Avg",
-          "range": true,
-          "refId": "A"
-        }
-      ],
-      "title": "Average Response Time Over Time (by Endpoint)",
+      "title": "Request duration(Elapsed time )",
       "type": "timeseries"
     },
     {
@@ -839,7 +958,7 @@
             "properties": [
               {
                 "id": "custom.width",
-                "value": 100
+                "value": 84
               }
             ]
           },
@@ -897,7 +1016,7 @@
         "h": 12,
         "w": 24,
         "x": 0,
-        "y": 95
+        "y": 117
       },
       "id": 27,
       "options": {
@@ -922,7 +1041,7 @@
           },
           "editorMode": "code",
           "exemplar": true,
-          "expr": "1000 *\r\n(\r\n  sum by (application, method, uri, status) (\r\n    rate(fbb_http_client_requests_seconds_sum{application=\"$application\",method=~\"$method\",uri=~\"$uri\"}[$__range])\r\n  )\r\n)\r\n/\r\n(\r\n  sum by (application, method, uri, status) (\r\n    rate(fbb_http_client_requests_seconds_count{application=\"$application\",method=~\"$method\",uri=~\"$uri\"}[$__range])\r\n  )\r\n)\r\n",
+          "expr": "clamp_min(\r\n  1000 *\r\n  (\r\n    sum by (application, method, uri, status) (\r\n      rate({__name__=~\".*_http_client_requests_seconds_sum\",\r\n        application=~\"$application\",\r\n        method=~\"$method\",\r\n        uri=~\"$uri\"\r\n      }[1m])\r\n    )\r\n  )\r\n  /\r\n  (\r\n    sum by (application, method, uri, status) (\r\n      rate({__name__=~\".*_http_client_requests_seconds_count\",\r\n        application=~\"$application\",\r\n        method=~\"$method\",\r\n        uri=~\"$uri\"\r\n      }[1m])\r\n    )\r\n  ),\r\n  0\r\n)\r\n",
           "format": "table",
           "hide": false,
           "instant": true,
@@ -938,7 +1057,7 @@
           },
           "editorMode": "code",
           "exemplar": true,
-          "expr": "1000 *\r\nhistogram_quantile(\r\n  0.01,\r\n  sum by (le,application, method, uri, status) (\r\n rate(fbb_fhttp_client_requests_seconds_bucket{application=\"$application\",method=~\"$method\",uri=~\"$uri\"}[$__range])\r\n  )\r\n)\r\n",
+          "expr": "1000 *\r\nhistogram_quantile(\r\n  0.01,\r\n  sum by (le,application, method, uri, status) (\r\nrate({__name__=~\".*_http_client_requests_seconds_bucket\",application=~\"$application\",method=~\"$method\",uri=~\"$uri\"}[1m])\r\n  )\r\n)\r\n",
           "format": "table",
           "hide": false,
           "instant": true,
@@ -954,7 +1073,7 @@
           },
           "editorMode": "code",
           "exemplar": true,
-          "expr": "1000 *\r\nmax by (application, method, uri, status) (\r\n  histogram_quantile(\r\n    1,\r\n    sum by (le, application, method, uri, status) (\r\n rate(fbb_http_client_requests_seconds_bucket{application=\"$application\",method=~\"$method\",uri=~\"$uri\"}[$__range])\r\n    )\r\n  )\r\n)\r\n",
+          "expr": "1000 *\r\nmax by (application, method, uri, status) (\r\n  histogram_quantile(\r\n    1,\r\n    sum by (le, application, method, uri, status) (\r\nrate({__name__=~\".*_http_client_requests_seconds_bucket\",application=~\"$application\",method=~\"$method\",uri=~\"$uri\"}[1m])\r\n    )\r\n  )\r\n)\r\n",
           "format": "table",
           "hide": false,
           "instant": true,
@@ -970,7 +1089,7 @@
           },
           "editorMode": "code",
           "exemplar": true,
-          "expr": "1000 *\r\nhistogram_quantile(\r\n  0.50,\r\n  sum by (le, application, method, uri, status)(\r\n    rate(\r\n      fbb_http_client_requests_seconds_bucket{\r\n        application=\"$application\",\r\n        method=~\"$method\",\r\n        uri=~\"$uri\"\r\n      }[$__range]\r\n    )\r\n  )\r\n)\r",
+          "expr": "1000 *\r\nhistogram_quantile(\r\n  0.50,\r\n  sum by (le, application, method, uri, status)(\r\n    rate(\r\n(\n  {__name__=~\".*_http_client_requests_seconds_bucket\",\n  application=~\"$application\",\n  method=~\"$method\",\n  uri=~\"$uri\"}\n  [1m]\r\n    )\n    )\r\n  )\r\n)\r",
           "format": "table",
           "hide": false,
           "instant": true,
@@ -986,7 +1105,7 @@
           },
           "editorMode": "code",
           "exemplar": true,
-          "expr": "1000 *\r\nhistogram_quantile(\r\n  0.95,\r\n  sum by (le, application, method, uri, status)(\r\n    rate(\r\n      fbb_http_client_requests_seconds_bucket{\r\n        application=\"$application\",\r\n        method=~\"$method\",\r\n        uri=~\"$uri\"\r\n      }[$__range]\r\n    )\r\n  )\r\n)\r\n",
+          "expr": "1000 *\r\nhistogram_quantile(\r\n  0.95,\r\n  sum by (le, application, method, uri, status)(\r\n    rate({__name__=~\".*_http_client_requests_seconds_bucket\",\r\n        application=\"$application\",\r\n        method=~\"$method\",\r\n        uri=~\"$uri\"\r\n      }[1m]\r\n    )\r\n  )\r\n)\r\n",
           "format": "table",
           "hide": false,
           "instant": true,
@@ -1002,7 +1121,7 @@
           },
           "editorMode": "code",
           "exemplar": true,
-          "expr": "1000 *\r\nhistogram_quantile(\r\n  0.99,\r\n  sum by (le, application, method, uri, status)(\r\n    rate(\r\n      fbb_http_client_requests_seconds_bucket{\r\n        application=\"$application\",\r\n        method=~\"$method\",\r\n        uri=~\"$uri\"\r\n      }[$__range]\r\n    )\r\n  )\r\n)\r\n",
+          "expr": "1000 *\r\nhistogram_quantile(\r\n  0.99,\r\n  sum by (le, application, method, uri, status)(\r\n    rate({__name__=~\".*_http_client_requests_seconds_bucket\",\r\n        application=\"$application\",\r\n        method=~\"$method\",\r\n        uri=~\"$uri\"\r\n      }[1m]\r\n    )\r\n  )\r\n)\r\n",
           "format": "table",
           "hide": false,
           "instant": true,
@@ -1013,7 +1132,7 @@
         },
         {
           "exemplar": true,
-          "expr": "floor(\r\n  sum by (application, method, uri, status)(\r\n    increase(\r\n      fbb_http_client_requests_seconds_count{\r\n        application=\"$application\",\r\n        method=~\"$method\",\r\n        uri=~\"$uri\"\r\n      }[$__range]\r\n    )\r\n  )\r\n)\r",
+          "expr": "floor(\r\n  sum by (application, method, uri, status)(\r\n    increase({\r__name__=~\".*_http_client_requests_seconds_count\",\r\n        application=\"$application\",\r\n        method=~\"$method\",\r\n        uri=~\"$uri\"\r\n      }[1m]\r\n    )\r\n  )\r\n)\r",
           "format": "table",
           "hide": false,
           "instant": true,
@@ -1022,7 +1141,7 @@
           "refId": "Count"
         }
       ],
-      "title": "Summary HTTP Client Requests - Performance by Endpoint",
+      "title": "Summary HTTP Client Requests(Elapsed time)",
       "transformations": [
         {
           "id": "merge",
@@ -1037,10 +1156,10 @@
             },
             "indexByName": {
               "Time": 0,
-              "Value #Avg": 6,
+              "Value #Avg": 8,
               "Value #Count": 5,
-              "Value #Max": 8,
-              "Value #Min": 7,
+              "Value #Max": 7,
+              "Value #Min": 6,
               "Value #P50": 9,
               "Value #P95": 10,
               "Value #P99": 11,
@@ -1066,6 +1185,693 @@
         }
       ],
       "type": "table"
+    },
+    {
+      "datasource": null,
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "align": "auto",
+            "filterable": false
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "#EAB839",
+                "value": 400
+              },
+              {
+                "color": "red",
+                "value": 500
+              }
+            ]
+          },
+          "unit": "none"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Method"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 80
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "URI"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 300
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Status"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 80
+              },
+              {
+                "id": "custom.displayMode",
+                "value": "color-text"
+              },
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "from": "",
+                    "id": 1,
+                    "text": "200",
+                    "to": "",
+                    "type": 1,
+                    "value": "200"
+                  },
+                  {
+                    "from": "",
+                    "id": 2,
+                    "text": "404",
+                    "to": "",
+                    "type": 1,
+                    "value": "404"
+                  },
+                  {
+                    "from": "",
+                    "id": 3,
+                    "text": "500",
+                    "to": "",
+                    "type": 1,
+                    "value": "500"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Min (ms)"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 100
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Avg (ms)"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 84
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Max (ms)"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 100
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Count"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 100
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "P95 (ms)"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 100
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "P99 (ms)"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 100
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 12,
+        "w": 24,
+        "x": 0,
+        "y": 129
+      },
+      "id": 40,
+      "options": {
+        "cellHeight": "sm",
+        "footer": {
+          "countRows": false,
+          "fields": "",
+          "reducer": [
+            "sum"
+          ],
+          "show": false
+        },
+        "showHeader": true,
+        "sortBy": []
+      },
+      "pluginVersion": "7.5.17",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "editorMode": "code",
+          "exemplar": true,
+          "expr": "(\r\n  1000 *\r\n  (\r\n    sum by (application, method, uri, status) (\r\n      rate(\r\n        {__name__=~\".*_http_client_requests_seconds_sum\",\r\n         application=~\"$application\",\r\n         method=~\"$method\",\r\n         uri=~\"$uri\"}\r\n        [$__range]\r\n      )\r\n    )\r\n  )\r\n  /\r\n  (\r\n    sum by (application, method, uri, status) (\r\n      rate(\r\n        {__name__=~\".*_http_client_requests_seconds_count\",\r\n         application=~\"$application\",\r\n         method=~\"$method\",\r\n         uri=~\"$uri\"}\r\n        [$__range]\r\n      )\r\n    )\r\n  )\r\n)\r\n\r",
+          "format": "table",
+          "hide": false,
+          "instant": true,
+          "interval": "",
+          "legendFormat": "{{uri}}",
+          "range": false,
+          "refId": "Avg"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "editorMode": "code",
+          "exemplar": true,
+          "expr": "1000 *\r\nhistogram_quantile(\r\n  0.01,\r\n  sum by (le,application, method, uri, status) (\r\nrate({__name__=~\".*_http_client_requests_seconds_bucket\",application=~\"$application\",method=~\"$method\",uri=~\"$uri\"}[$__range])\r\n  )\r\n)\r\n",
+          "format": "table",
+          "hide": false,
+          "instant": true,
+          "interval": "",
+          "legendFormat": "{{uri}}",
+          "range": false,
+          "refId": "Min"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "editorMode": "code",
+          "exemplar": true,
+          "expr": "1000 *\r\nmax by (application, method, uri, status) (\r\n  histogram_quantile(\r\n    1,\r\n    sum by (le, application, method, uri, status) (\r\nrate({__name__=~\".*_http_client_requests_seconds_bucket\",application=~\"$application\",method=~\"$method\",uri=~\"$uri\"}[$__range])\r\n    )\r\n  )\r\n)\r\n",
+          "format": "table",
+          "hide": false,
+          "instant": true,
+          "interval": "",
+          "legendFormat": "__auto",
+          "range": false,
+          "refId": "Max"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "editorMode": "code",
+          "exemplar": true,
+          "expr": "1000 *\r\nhistogram_quantile(\r\n  0.50,\r\n  sum by (le, application, method, uri, status)(\r\n    rate(\r\n(\n  {__name__=~\".*_http_client_requests_seconds_bucket\",\n  application=~\"$application\",\n  method=~\"$method\",\n  uri=~\"$uri\"}\n  [$__range]\r\n    )\n    )\r\n  )\r\n)\r",
+          "format": "table",
+          "hide": false,
+          "instant": true,
+          "interval": "",
+          "legendFormat": "__auto",
+          "range": false,
+          "refId": "P50"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "editorMode": "code",
+          "exemplar": true,
+          "expr": "1000 *\r\nhistogram_quantile(\r\n  0.95,\r\n  sum by (le, application, method, uri, status)(\r\n    rate({__name__=~\".*_http_client_requests_seconds_bucket\",\r\n        application=\"$application\",\r\n        method=~\"$method\",\r\n        uri=~\"$uri\"\r\n      }[$__range]\r\n    )\r\n  )\r\n)\r\n",
+          "format": "table",
+          "hide": false,
+          "instant": true,
+          "interval": "",
+          "legendFormat": "__auto",
+          "range": false,
+          "refId": "P95"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "editorMode": "code",
+          "exemplar": true,
+          "expr": "1000 *\r\nhistogram_quantile(\r\n  0.99,\r\n  sum by (le, application, method, uri, status)(\r\n    rate({__name__=~\".*_http_client_requests_seconds_bucket\",\r\n        application=\"$application\",\r\n        method=~\"$method\",\r\n        uri=~\"$uri\"\r\n      }[$__range]\r\n    )\r\n  )\r\n)\r\n",
+          "format": "table",
+          "hide": false,
+          "instant": true,
+          "interval": "",
+          "legendFormat": "__auto",
+          "range": false,
+          "refId": "P99"
+        },
+        {
+          "exemplar": true,
+          "expr": "floor(\r\n  sum by (application, method, uri, status)(\r\n    increase({\r__name__=~\".*_http_client_requests_seconds_count\",\r\n        application=\"$application\",\r\n        method=~\"$method\",\r\n        uri=~\"$uri\"\r\n      }[$__range]\r\n    )\r\n  )\r\n)\r",
+          "format": "table",
+          "hide": false,
+          "instant": true,
+          "interval": "",
+          "legendFormat": "",
+          "refId": "Count"
+        }
+      ],
+      "title": "Summary HTTP Client Requests(Last $__range)",
+      "transformations": [
+        {
+          "id": "merge",
+          "options": {}
+        },
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "Time": true,
+              "application": true
+            },
+            "indexByName": {
+              "Time": 0,
+              "Value #Avg": 8,
+              "Value #Count": 5,
+              "Value #Max": 7,
+              "Value #Min": 6,
+              "Value #P50": 9,
+              "Value #P95": 10,
+              "Value #P99": 11,
+              "application": 1,
+              "method": 2,
+              "status": 4,
+              "uri": 3
+            },
+            "renameByName": {
+              "Value": "",
+              "Value #Avg": "Avg (ms)",
+              "Value #Count": "Count",
+              "Value #Max": "Max (ms)",
+              "Value #Min": "Min (ms)",
+              "Value #P50": "P50(ms)",
+              "Value #P95": "P95 (ms)",
+              "Value #P99": "P99 (ms)",
+              "method": "Method",
+              "status": "Status",
+              "uri": "URI"
+            }
+          }
+        }
+      ],
+      "type": "table"
+    },
+    {
+      "datasource": null,
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "align": null,
+            "filterable": false
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "uri"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 339
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 10,
+        "w": 24,
+        "x": 0,
+        "y": 141
+      },
+      "id": 46,
+      "options": {
+        "showHeader": true,
+        "sortBy": [
+          {
+            "desc": true,
+            "displayName": "P99 (ms)"
+          }
+        ]
+      },
+      "pluginVersion": "7.5.17",
+      "targets": [
+        {
+          "exemplar": true,
+          "expr": "topk(\r\n  5,\r\n  histogram_quantile(\r\n    0.99,\r\n    sum by (le, method, uri, status)(\r\n      rate(\r{__name__=~\".*_http_client_requests_seconds_bucket\",\n           uri=~\"$uri\",method=~\"$method\"\r\n        }[1m]\r\n      )\r\n    )\r\n  ) * 1000\r\n)\r\n",
+          "format": "table",
+          "instant": true,
+          "interval": "",
+          "legendFormat": "{{uri}}",
+          "refId": "A"
+        }
+      ],
+      "title": "Summary Top 5 URI P99 (Elapsed time )",
+      "transformations": [
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "Time": true
+            },
+            "indexByName": {
+              "Time": 0,
+              "Value": 4,
+              "method": 2,
+              "status": 3,
+              "uri": 1
+            },
+            "renameByName": {
+              "Value": "P99 (ms)"
+            }
+          }
+        }
+      ],
+      "type": "table"
+    },
+    {
+      "datasource": null,
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "align": null,
+            "filterable": false
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "uri"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 339
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 10,
+        "w": 24,
+        "x": 0,
+        "y": 151
+      },
+      "id": 31,
+      "options": {
+        "showHeader": true,
+        "sortBy": [
+          {
+            "desc": true,
+            "displayName": "P99 (ms)"
+          }
+        ]
+      },
+      "pluginVersion": "7.5.17",
+      "targets": [
+        {
+          "exemplar": true,
+          "expr": "topk(\r\n  5,\r\n  histogram_quantile(\r\n    0.99,\r\n    sum by (le, method, uri, status)(\r\n      rate(\r{__name__=~\".*_http_client_requests_seconds_bucket\",\n           uri=~\"$uri\",method=~\"$method\"\r\n        }[$__range]\r\n      )\r\n    )\r\n  ) * 1000\r\n)\r\n",
+          "format": "table",
+          "instant": true,
+          "interval": "",
+          "legendFormat": "{{uri}}",
+          "refId": "A"
+        }
+      ],
+      "title": "Summary Top 5 URI P99 (Last $__range)",
+      "transformations": [
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "Time": true
+            },
+            "indexByName": {
+              "Time": 0,
+              "Value": 4,
+              "method": 2,
+              "status": 3,
+              "uri": 1
+            },
+            "renameByName": {
+              "Value": "P99 (ms)"
+            }
+          }
+        }
+      ],
+      "type": "table"
+    },
+    {
+      "datasource": null,
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 10,
+            "gradientMode": "none",
+            "hideFrom": {
+              "graph": false,
+              "legend": false,
+              "tooltip": false
+            },
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "spanNulls": true
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 12,
+        "w": 24,
+        "x": 0,
+        "y": 161
+      },
+      "id": 39,
+      "options": {
+        "graph": {},
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom"
+        },
+        "tooltipOptions": {
+          "mode": "single"
+        }
+      },
+      "pluginVersion": "7.5.17",
+      "targets": [
+        {
+          "exemplar": true,
+          "expr": "floor(\r\n  sum by(uri,status,method)(\r\n    increase(\r\n      {__name__=~\".*_http_client_requests_seconds_count\",\n      uri=~\"$uri\"}\n      [1m]\r\n    )\r\n  )\r\n)\r\n",
+          "interval": "",
+          "legendFormat": "{{method}} {{uri}}  {{status}}",
+          "refId": "A"
+        }
+      ],
+      "title": "Total Request By Uri (Elapsed time)",
+      "type": "timeseries"
+    },
+    {
+      "datasource": null,
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 10,
+            "gradientMode": "none",
+            "hideFrom": {
+              "graph": false,
+              "legend": false,
+              "tooltip": false
+            },
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "spanNulls": true
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 12,
+        "w": 24,
+        "x": 0,
+        "y": 173
+      },
+      "id": 41,
+      "options": {
+        "graph": {},
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom"
+        },
+        "tooltipOptions": {
+          "mode": "single"
+        }
+      },
+      "pluginVersion": "7.5.17",
+      "targets": [
+        {
+          "exemplar": true,
+          "expr": "floor(\r\n  sum by(uri,status,method)(\r\n    increase(\r\n      {__name__=~\".*_http_client_requests_seconds_count\",\n      uri=~\"$uri\"}\n      [$__range]\r\n    )\r\n  )\r\n)\r\n",
+          "interval": "",
+          "legendFormat": "{{method}}{{uri}} :   {{status}}",
+          "refId": "A"
+        }
+      ],
+      "title": "Total Request By Uri (Last $__range)",
+      "type": "timeseries"
     },
     {
       "datasource": null,
@@ -1125,9 +1931,9 @@
         "h": 12,
         "w": 24,
         "x": 0,
-        "y": 107
+        "y": 185
       },
-      "id": 23,
+      "id": 37,
       "options": {
         "showHeader": true,
         "sortBy": []
@@ -1136,35 +1942,35 @@
       "targets": [
         {
           "exemplar": true,
-          "expr": "floor(\r\n  sum by(uri)(\r\n    increase(\r\n      fbb_http_client_requests_seconds_count{status=~\"2..\",uri=~\"$uri\"}[$__range]\r\n    )\r\n  )\r\n)\r\n",
+          "expr": "floor(\r\n  sum by(uri)(\r\n    increase(\r\n      {__name__=~\".*_http_client_requests_seconds_count\",\n      status=~\"2..\",\n      uri=~\"$uri\"}\n      [1m]\r\n    )\r\n  )\r\n)\r\n",
           "format": "table",
-          "instant": true,
+          "instant": false,
           "interval": "",
           "legendFormat": "{{uri}}",
-          "refId": "A"
+          "refId": "success"
         },
         {
           "exemplar": true,
-          "expr": "floor(\r\n  sum by(uri)(\r\n    increase(\r\n      fbb_http_client_requests_seconds_count{status=~\"4..|5..\",uri=~\"$uri\"}[$__range]\r\n    )\r\n  )\r\n)\r",
+          "expr": "floor(\r\n  sum by(uri)(\r\n    increase(\r\n      {__name__=~\".*_http_client_requests_seconds_count\",status=~\"4..|5..\",uri=~\"$uri\"}[1m]\r\n    )\r\n  )\r\n)\r",
           "format": "table",
           "hide": false,
-          "instant": true,
+          "instant": false,
           "interval": "",
           "legendFormat": "{{uri}}",
-          "refId": "B"
+          "refId": "failed"
         },
         {
           "exemplar": true,
-          "expr": "floor(\r\n  sum by(uri)(\r\n    increase(\r\n      fbb_http_client_requests_seconds_count{uri=~\"$uri\"}[$__range]\r\n    )\r\n  )\r\n)\r",
+          "expr": "floor(\r\n  sum by(uri)(\r\n    increase(\r\n      {__name__=~\".*_http_client_requests_seconds_count\",uri=~\"$uri\"}[1m]\r\n    )\r\n  )\r\n)\r",
           "format": "table",
           "hide": false,
-          "instant": true,
+          "instant": false,
           "interval": "",
           "legendFormat": "{{uri}}",
-          "refId": "C"
+          "refId": "total"
         }
       ],
-      "title": "Summary Request Count by Uri",
+      "title": "Summary Request Count by Uri (Elapsed time)",
       "transformations": [
         {
           "id": "seriesToColumns",
@@ -1176,6 +1982,7 @@
           "id": "organize",
           "options": {
             "excludeByName": {
+              "Time": true,
               "Time 1": true,
               "Time 2": true,
               "Time 3": true
@@ -1184,7 +1991,110 @@
             "renameByName": {
               "Value #A": "success",
               "Value #B": "failed",
-              "Value #C": "total"
+              "Value #C": "total",
+              "Value #failed": "failed",
+              "Value #success": "success",
+              "Value #total": "total"
+            }
+          }
+        }
+      ],
+      "type": "table"
+    },
+    {
+      "datasource": null,
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "align": null,
+            "displayMode": "auto",
+            "filterable": false
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 12,
+        "w": 24,
+        "x": 0,
+        "y": 197
+      },
+      "id": 23,
+      "options": {
+        "showHeader": true,
+        "sortBy": []
+      },
+      "pluginVersion": "7.5.17",
+      "targets": [
+        {
+          "exemplar": true,
+          "expr": "floor(\r\n  sum by(uri)(\r\n    increase(\r\n      {__name__=~\".*_http_client_requests_seconds_count\",status=~\"2..\",uri=~\"$uri\"}[$__range]\r\n    )\r\n  )\r\n)\r\n",
+          "format": "table",
+          "instant": true,
+          "interval": "",
+          "legendFormat": "{{uri}}",
+          "refId": "success"
+        },
+        {
+          "exemplar": true,
+          "expr": "floor(\r\n  sum by(uri)(\r\n    increase(\r\n      {__name__=~\".*_http_client_requests_seconds_count\",status=~\"4..|5..\",uri=~\"$uri\"}[$__range]\r\n    )\r\n  )\r\n)\r",
+          "format": "table",
+          "hide": false,
+          "instant": true,
+          "interval": "",
+          "legendFormat": "{{uri}}",
+          "refId": "failed"
+        },
+        {
+          "exemplar": true,
+          "expr": "floor(\r\n  sum by(uri)(\r\n    increase(\r\n      {__name__=~\".*_http_client_requests_seconds_count\",uri=~\"$uri\"}[$__range]\r\n    )\r\n  )\r\n)\r",
+          "format": "table",
+          "hide": false,
+          "instant": true,
+          "interval": "",
+          "legendFormat": "{{uri}}",
+          "refId": "total"
+        }
+      ],
+      "title": "Summary Request Count by Uri (Last $__range)",
+      "transformations": [
+        {
+          "id": "seriesToColumns",
+          "options": {
+            "byField": "uri"
+          }
+        },
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "Time": true,
+              "Time 1": true,
+              "Time 2": true,
+              "Time 3": true
+            },
+            "indexByName": {},
+            "renameByName": {
+              "Value #A": "success",
+              "Value #B": "failed",
+              "Value #C": "total",
+              "Value #failed": "failed",
+              "Value #success": "success",
+              "Value #total": "total"
             }
           }
         }
@@ -1216,25 +2126,39 @@
               }
             ]
           },
-          "unit": "ms"
+          "unit": "none"
         },
-        "overrides": []
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "average(ms)"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 260
+              }
+            ]
+          }
+        ]
       },
       "gridPos": {
         "h": 13,
         "w": 24,
         "x": 0,
-        "y": 119
+        "y": 209
       },
       "id": 25,
       "options": {
-        "showHeader": true
+        "showHeader": true,
+        "sortBy": []
       },
       "pluginVersion": "7.5.17",
       "targets": [
         {
           "exemplar": true,
-          "expr": "1000 *\r\nhistogram_quantile(\r\n  0.01,\r\n  sum by (le, uri) (\r\n    rate(fbb_http_client_requests_seconds_bucket{uri=~\"$uri\"}[$__range])\r\n  )\r\n)\r\n",
+          "expr": "1000 *\r\nhistogram_quantile(\r\n  0.01,\r\n  sum by (le, uri) (\r\n    rate({__name__=~\".*_http_client_requests_seconds_bucket\",uri=~\"$uri\"}[$__range])\r\n  )\r\n)\r\n",
           "format": "table",
           "hide": false,
           "instant": true,
@@ -1244,7 +2168,7 @@
         },
         {
           "exemplar": true,
-          "expr": "1000 *\r\nmax by (uri) (\r\n  histogram_quantile(\r\n    1,\r\n    sum by (le, uri) (\r\n      rate(fbb_http_client_requests_seconds_bucket{uri=~\"$uri\"}[$__range])\r\n    )\r\n  )\r\n)\r\n",
+          "expr": "1000 *\r\nmax by (uri) (\r\n  histogram_quantile(\r\n    1,\r\n    sum by (le, uri) (\r\n      rate({__name__=~\".*_http_client_requests_seconds_bucket\",uri=~\"$uri\"}[$__range])\r\n    )\r\n  )\r\n)\r\n",
           "format": "table",
           "hide": false,
           "instant": true,
@@ -1254,16 +2178,26 @@
         },
         {
           "exemplar": true,
-          "expr": "1000* (sum by(uri)  (rate(fbb_http_client_requests_seconds_sum{uri=~\"$uri\"}[$__range]))\r\n/\r\nsum by(uri)  (rate(fbb_http_client_requests_seconds_count{uri=~\"$uri\"}[$__range])))",
+          "expr": "1000* (sum by(uri)  (rate({__name__=~\".*_http_client_requests_seconds_sum\",uri=~\"$uri\"}[$__range]))\r\n/\r\nsum by(uri)  (rate({__name__=~\".*_http_client_requests_seconds_count\",uri=~\"$uri\"}[$__range])))",
           "format": "table",
           "hide": false,
           "instant": true,
           "interval": "",
           "legendFormat": "{{uri}}",
           "refId": "average"
+        },
+        {
+          "exemplar": true,
+          "expr": "floor(\r\n  sum by(uri)(\r\n    increase(\r\n      {__name__=~\".*_http_client_requests_seconds_count\",uri=~\"$uri\"}[$__range]\r\n    )\r\n  )\r\n)",
+          "format": "table",
+          "hide": false,
+          "instant": true,
+          "interval": "",
+          "legendFormat": "",
+          "refId": "count"
         }
       ],
-      "title": "Summary Average Request Time",
+      "title": "Summary Average Request Time on Range",
       "transformations": [
         {
           "id": "seriesToColumns",
@@ -1278,17 +2212,30 @@
               "Time": true,
               "Time 1": true,
               "Time 2": true,
-              "Time 3": true
+              "Time 3": true,
+              "Time 4": true
             },
-            "indexByName": {},
+            "indexByName": {
+              "Time 1": 2,
+              "Time 2": 4,
+              "Time 3": 6,
+              "Time 4": 8,
+              "Value #A": 1,
+              "Value #average": 7,
+              "Value #max": 5,
+              "Value #min": 3,
+              "uri": 0
+            },
             "renameByName": {
               "Time 1": "",
-              "Value #A": "min",
+              "Time 4": "",
+              "Value #A": "count",
               "Value #B": "max",
               "Value #C": "average",
-              "Value #average": "average",
-              "Value #max": "max",
-              "Value #min": "min",
+              "Value #average": "average(ms)",
+              "Value #count": "count",
+              "Value #max": "max(ms)",
+              "Value #min": "min(ms)",
               "uri": ""
             }
           }
@@ -1343,10 +2290,94 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 10,
-        "w": 12,
+        "h": 13,
+        "w": 24,
         "x": 0,
-        "y": 132
+        "y": 222
+      },
+      "id": 47,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        },
+        "tooltipOptions": {
+          "mode": "single"
+        }
+      },
+      "pluginVersion": "12.3.0",
+      "targets": [
+        {
+          "editorMode": "code",
+          "exemplar": true,
+          "expr": "floor(sum(increase(fbb_http_client_requests_seconds_count[1m])))",
+          "interval": "",
+          "legendFormat": "request",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "Total request(Elapsed time)",
+      "type": "timeseries"
+    },
+    {
+      "datasource": "${datasource}",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "graph": false,
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 13,
+        "w": 24,
+        "x": 0,
+        "y": 235
       },
       "id": 20,
       "options": {
@@ -1370,14 +2401,14 @@
         {
           "editorMode": "code",
           "exemplar": true,
-          "expr": "floor(sum by (uri )(increase(fbb_http_client_requests_seconds_count[$__range])))",
+          "expr": "floor(sum(increase(fbb_http_client_requests_seconds_count[$__range])))",
           "interval": "",
-          "legendFormat": "{{uri}}",
+          "legendFormat": "request",
           "range": true,
           "refId": "A"
         }
       ],
-      "title": "Total request by uri",
+      "title": "Total request(Last $__range)",
       "type": "timeseries"
     },
     {
@@ -1385,7 +2416,7 @@
       "fieldConfig": {
         "defaults": {
           "color": {
-            "mode": "palette-classic"
+            "mode": "thresholds"
           },
           "mappings": [],
           "thresholds": {
@@ -1436,21 +2467,17 @@
         ]
       },
       "gridPos": {
-        "h": 8,
-        "w": 12,
+        "h": 5,
+        "w": 8,
         "x": 0,
-        "y": 142
+        "y": 248
       },
       "id": 12,
       "options": {
-        "displayLabels": [],
-        "legend": {
-          "displayMode": "list",
-          "placement": "bottom",
-          "showLegend": true,
-          "values": []
-        },
-        "pieType": "pie",
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "center",
+        "orientation": "auto",
         "reduceOptions": {
           "calcs": [
             "lastNotNull"
@@ -1458,15 +2485,10 @@
           "fields": "",
           "values": false
         },
-        "sort": "desc",
         "text": {},
-        "tooltip": {
-          "hideZeros": false,
-          "mode": "single",
-          "sort": "none"
-        }
+        "textMode": "auto"
       },
-      "pluginVersion": "12.3.0",
+      "pluginVersion": "7.5.17",
       "targets": [
         {
           "editorMode": "code",
@@ -1478,290 +2500,8 @@
           "refId": "A"
         }
       ],
-      "title": "Response Status Distribution",
-      "type": "piechart"
-    },
-    {
-      "datasource": "${datasource}",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "drawStyle": "line",
-            "fillOpacity": 0,
-            "gradientMode": "none",
-            "hideFrom": {
-              "graph": false,
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "lineInterpolation": "linear",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "auto",
-            "spanNulls": false
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          }
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 11,
-        "w": 24,
-        "x": 0,
-        "y": 150
-      },
-      "id": 10,
-      "options": {
-        "legend": {
-          "calcs": [],
-          "displayMode": "list",
-          "placement": "bottom",
-          "showLegend": true
-        },
-        "tooltip": {
-          "hideZeros": false,
-          "mode": "single",
-          "sort": "none"
-        },
-        "tooltipOptions": {
-          "mode": "single"
-        }
-      },
-      "pluginVersion": "12.3.0",
-      "targets": [
-        {
-          "editorMode": "code",
-          "exemplar": true,
-          "expr": "sum by (executor) (rate(executor_tasks_completed[$__range]))",
-          "interval": "",
-          "legendFormat": "{{executor}}",
-          "range": true,
-          "refId": "A"
-        }
-      ],
-      "title": "Complete Task",
-      "type": "timeseries"
-    },
-    {
-      "datasource": "${datasource}",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "drawStyle": "line",
-            "fillOpacity": 0,
-            "gradientMode": "none",
-            "hideFrom": {
-              "graph": false,
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "lineInterpolation": "linear",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "auto",
-            "spanNulls": false
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          }
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 12,
-        "w": 24,
-        "x": 0,
-        "y": 161
-      },
-      "id": 7,
-      "options": {
-        "legend": {
-          "calcs": [],
-          "displayMode": "list",
-          "placement": "bottom",
-          "showLegend": true
-        },
-        "tooltip": {
-          "hideZeros": false,
-          "mode": "single",
-          "sort": "none"
-        },
-        "tooltipOptions": {
-          "mode": "single"
-        }
-      },
-      "pluginVersion": "12.3.0",
-      "targets": [
-        {
-          "editorMode": "code",
-          "exemplar": true,
-          "expr": "100 * sum(\r\n  rate(executor_tasks_completed[$__range])\r\n)\r\n",
-          "interval": "",
-          "legendFormat": "rate",
-          "range": true,
-          "refId": "A"
-        }
-      ],
-      "title": "Complete Task rate ",
-      "type": "timeseries"
-    },
-    {
-      "datasource": "${datasource}",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "drawStyle": "line",
-            "fillOpacity": 0,
-            "gradientMode": "none",
-            "hideFrom": {
-              "graph": false,
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "lineInterpolation": "linear",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "auto",
-            "spanNulls": false
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          }
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 11,
-        "w": 24,
-        "x": 0,
-        "y": 173
-      },
-      "id": 5,
-      "options": {
-        "legend": {
-          "calcs": [],
-          "displayMode": "list",
-          "placement": "bottom",
-          "showLegend": true
-        },
-        "tooltip": {
-          "hideZeros": false,
-          "mode": "single",
-          "sort": "none"
-        },
-        "tooltipOptions": {
-          "mode": "single"
-        }
-      },
-      "pluginVersion": "12.3.0",
-      "targets": [
-        {
-          "editorMode": "code",
-          "exemplar": true,
-          "expr": "histogram_quantile(0.50, sum(rate(fbb_http_client_requests_seconds_bucket[$__range])) by (le))",
-          "interval": "",
-          "legendFormat": "p50",
-          "range": true,
-          "refId": "A"
-        },
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "cf4rmgzov4b28e"
-          },
-          "editorMode": "code",
-          "exemplar": true,
-          "expr": "histogram_quantile(0.95, sum(rate(fbb_http_client_requests_seconds_bucket[$__range])) by (le))\r",
-          "hide": false,
-          "instant": false,
-          "interval": "",
-          "legendFormat": "p95",
-          "range": true,
-          "refId": "B"
-        },
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "cf4rmgzov4b28e"
-          },
-          "editorMode": "code",
-          "exemplar": true,
-          "expr": "histogram_quantile(0.99, sum(rate(fbb_http_client_requests_seconds_bucket[$__range])) by (le))\r",
-          "hide": false,
-          "instant": false,
-          "interval": "",
-          "legendFormat": "p99",
-          "range": true,
-          "refId": "C"
-        }
-      ],
-      "title": "Latency Percentiles (s)",
-      "type": "timeseries"
+      "title": "status count",
+      "type": "stat"
     }
   ],
   "refresh": false,
@@ -1799,7 +2539,7 @@
           "value": "fbbfap"
         },
         "datasource": null,
-        "definition": "label_values(http_client_requests_seconds_count,application)",
+        "definition": "label_values(fbb_http_client_requests_seconds_count,application)",
         "description": null,
         "error": null,
         "hide": 0,
@@ -1809,7 +2549,7 @@
         "name": "application",
         "options": [],
         "query": {
-          "query": "label_values(http_client_requests_seconds_count,application)",
+          "query": "label_values(fbb_http_client_requests_seconds_count,application)",
           "refId": "StandardVariableQuery"
         },
         "refresh": 1,
@@ -1834,7 +2574,7 @@
           ]
         },
         "datasource": null,
-        "definition": "label_values(http_client_requests_seconds_count,uri)",
+        "definition": "label_values(fbb_http_client_requests_seconds_count{application=~\"$application\"},uri)",
         "description": null,
         "error": null,
         "hide": 0,
@@ -1844,7 +2584,7 @@
         "name": "uri",
         "options": [],
         "query": {
-          "query": "label_values(http_client_requests_seconds_count,uri)",
+          "query": "label_values(fbb_http_client_requests_seconds_count{application=~\"$application\"},uri)",
           "refId": "StandardVariableQuery"
         },
         "refresh": 2,
@@ -1865,7 +2605,7 @@
           "value": "GET"
         },
         "datasource": null,
-        "definition": "label_values(http_client_requests_seconds_count,method)",
+        "definition": "label_values(fbb_http_client_requests_seconds_count{uri=~\"$uri\"}, method)",
         "description": null,
         "error": null,
         "hide": 0,
@@ -1875,18 +2615,18 @@
         "name": "method",
         "options": [
           {
-            "selected": true,
+            "selected": false,
             "text": "All",
             "value": "$__all"
           },
           {
-            "selected": false,
+            "selected": true,
             "text": "GET",
             "value": "GET"
           }
         ],
         "query": {
-          "query": "label_values(http_client_requests_seconds_count,method)",
+          "query": "label_values(fbb_http_client_requests_seconds_count{uri=~\"$uri\"}, method)",
           "refId": "StandardVariableQuery"
         },
         "refresh": 0,
@@ -1902,12 +2642,12 @@
     ]
   },
   "time": {
-    "from": "now-12h",
+    "from": "now-30m",
     "to": "now"
   },
   "timepicker": {},
   "timezone": "browser",
   "title": "outbound api (httpclient)",
   "uid": "ad742v6",
-  "version": 36
+  "version": 65
 }
