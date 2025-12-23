@@ -19,7 +19,7 @@
   "gnetId": null,
   "graphTooltip": 0,
   "id": 3,
-  "iteration": 1766378602916,
+  "iteration": 1766472459336,
   "links": [],
   "panels": [
     {
@@ -1251,10 +1251,6 @@
               {
                 "id": "custom.width",
                 "value": 80
-              },
-              {
-                "id": "custom.displayMode",
-                "value": "color-text"
               },
               {
                 "id": "mappings",
@@ -2615,12 +2611,12 @@
         "name": "method",
         "options": [
           {
-            "selected": true,
+            "selected": false,
             "text": "All",
             "value": "$__all"
           },
           {
-            "selected": false,
+            "selected": true,
             "text": "GET",
             "value": "GET"
           }
@@ -2642,12 +2638,12 @@
     ]
   },
   "time": {
-    "from": "now-7d",
+    "from": "now-30m",
     "to": "now"
   },
   "timepicker": {},
   "timezone": "browser",
   "title": "outbound api (httpclient)",
   "uid": "ad742v6",
-  "version": 69
+  "version": 71
 }
