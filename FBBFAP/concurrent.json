@@ -1147,7 +1147,7 @@
   "gnetId": null,
   "graphTooltip": 0,
   "id": 9,
-  "iteration": 1766561184697,
+  "iteration": 1766717800145,
   "links": [],
   "panels": [
     {
@@ -1222,7 +1222,7 @@
       "targets": [
         {
           "exemplar": true,
-          "expr": "sum({__name__=~\".*_http_client_requests_active\"})",
+          "expr": "sum({__name__=~\".*_http_client_requests_active\",application=~\"$application\"})",
           "instant": true,
           "interval": "",
           "legendFormat": "",
@@ -1304,7 +1304,7 @@
       "targets": [
         {
           "exemplar": true,
-          "expr": "avg_over_time(\r\n  sum(\r\n    fbb_http_client_requests_active\r\n  )[1h:]\r\n)",
+          "expr": "avg_over_time(\r\n  sum(\r\n    {__name__=~\".*_http_client_requests_active\",application=~\"$application\"}\r\n  )[1h:]\r\n)",
           "instant": true,
           "interval": "",
           "legendFormat": "",
@@ -1395,7 +1395,7 @@
       "targets": [
         {
           "exemplar": true,
-          "expr": "max_over_time(\r\n  sum(\r\n   {__name__=~\".*_http_client_requests_active\"}\r\n  )[1h:]\r\n)",
+          "expr": "max_over_time(\r\n  sum(\r\n   {__name__=~\".*_http_client_requests_active\",application=~\"$application\"}\r\n  )[1h:]\r\n)",
           "format": "table",
           "instant": true,
           "interval": "",
@@ -1502,7 +1502,7 @@
       "targets": [
         {
           "exemplar": true,
-          "expr": "sum ({__name__=~\".*_http_client_requests_active\"})",
+          "expr": "sum ({__name__=~\".*_http_client_requests_active\",application=~\"$application\"})",
           "interval": "",
           "legendFormat": "Current Active",
           "refId": "A"
@@ -1599,7 +1599,7 @@
       "targets": [
         {
           "exemplar": true,
-          "expr": "\rsum by (uri,method)\r({__name__=~\".*_http_client_requests_active_per_api\", method=~\"$method\", uri=~\"$uri\"})",
+          "expr": "\rsum by (uri,method)\r({__name__=~\".*_http_client_requests_active_per_api\", method=~\"$method\", uri=~\"$uri\",application=~\"$application\"})",
           "interval": "",
           "legendFormat": "{{method}}{{uri}}",
           "refId": "A"
@@ -1656,7 +1656,7 @@
       "targets": [
         {
           "exemplar": true,
-          "expr": "topk(\r\n  5,\r\n  max_over_time(\r\n    sum by (uri, method) (\r\n      {__name__=~\".*_http_client_requests_active_per_api\",method=~\"$method\",uri=~\"$uri\"}\r\n    )[1h:]\r\n  )\r\n)\r\n",
+          "expr": "topk(\r\n  5,\r\n  max_over_time(\r\n    sum by (uri, method) (\r\n      {__name__=~\".*_http_client_requests_active_per_api\",method=~\"$method\",uri=~\"$uri\",application=~\"$application\"}\r\n    )[1h:]\r\n  )\r\n)\r\n",
           "format": "table",
           "instant": true,
           "interval": "",
@@ -1748,7 +1748,7 @@
       "targets": [
         {
           "exemplar": true,
-          "expr": "sum by(uri,method)({__name__=~\".*_http_client_requests_active_per_api\",method=~\"$method\",uri=~\"$uri\"})",
+          "expr": "sum by(uri,method)({__name__=~\".*_http_client_requests_active_per_api\",method=~\"$method\",uri=~\"$uri\",application=~\"$application\"})",
           "format": "table",
           "instant": true,
           "interval": "",
@@ -1757,7 +1757,7 @@
         },
         {
           "exemplar": true,
-          "expr": "max_over_time(\r\n  sum by(uri,method)(\r\n   {__name__=~\".*_http_client_requests_active_per_api\",method=~\"$method\",uri=~\"$uri\"}\r\n  )[1h:]\r\n)",
+          "expr": "max_over_time(\r\n  sum by(uri,method)(\r\n   {__name__=~\".*_http_client_requests_active_per_api\",method=~\"$method\",uri=~\"$uri\",application=~\"$application\"}\r\n  )[1h:]\r\n)",
           "format": "table",
           "hide": false,
           "instant": true,
@@ -1767,7 +1767,7 @@
         },
         {
           "exemplar": true,
-          "expr": "avg_over_time(\r\n  sum by(uri,method)(\r\n    {__name__=~\".*_http_client_requests_active_per_api\",method=~\"$method\",uri=~\"$uri\"}\r\n  )[1h:]\r\n)",
+          "expr": "avg_over_time(\r\n  sum by(uri,method)(\r\n    {__name__=~\".*_http_client_requests_active_per_api\",method=~\"$method\",uri=~\"$uri\",application=~\"$application\"}\r\n  )[1h:]\r\n)",
           "format": "table",
           "hide": false,
           "instant": true,
@@ -1851,7 +1851,7 @@
       "targets": [
         {
           "exemplar": true,
-          "expr": "topk(\r\n  10,\r\n  avg_over_time(\r\n    sum by (uri, method)(\r\n      {__name__=~\".*_http_client_requests_active_per_api\",method=~\"$method\",uri=~\"$uri\"}\r\n    )[1h:]\r\n  )\r\n)\r\n",
+          "expr": "topk(\r\n  10,\r\n  avg_over_time(\r\n    sum by (uri, method)(\r\n      {__name__=~\".*_http_client_requests_active_per_api\",method=~\"$method\",uri=~\"$uri\",application=~\"$application\"}\r\n    )[1h:]\r\n  )\r\n)\r\n",
           "format": "table",
           "instant": true,
           "interval": "",
@@ -1922,7 +1922,7 @@
       "targets": [
         {
           "exemplar": true,
-          "expr": "topk(\r\n  10,\r\n  max_over_time(\r\n    sum by (uri, method)(\r\n      {__name__=~\".*_http_client_requests_active_per_api\",method=~\"$method\",uri=~\"$uri\"}\r\n    )[1h:]\r\n  )\r\n)",
+          "expr": "topk(\r\n  10,\r\n  max_over_time(\r\n    sum by (uri, method)(\r\n      {__name__=~\".*_http_client_requests_active_per_api\",method=~\"$method\",uri=~\"$uri\",application=~\"$application\"}\r\n    )[1h:]\r\n  )\r\n)",
           "format": "table",
           "instant": true,
           "interval": "",
@@ -2019,9 +2019,13 @@
       {
         "allValue": null,
         "current": {
-          "selected": true,
-          "text": "GET",
-          "value": "GET"
+          "selected": false,
+          "text": [
+            "GET"
+          ],
+          "value": [
+            "GET"
+          ]
         },
         "datasource": null,
         "definition": "label_values(fbb_http_client_requests_seconds_count{application=\"$application\"}, method)",
@@ -2061,8 +2065,7 @@
       {
         "allValue": null,
         "current": {
-          "selected": true,
-          "tags": [],
+          "selected": false,
           "text": [
             "All"
           ],
@@ -2143,5 +2146,5 @@
   "timezone": "",
   "title": "Concurrent Http Client",
   "uid": "luCcbn7vk",
-  "version": 42
+  "version": 57
 }
