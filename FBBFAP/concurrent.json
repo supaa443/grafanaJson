@@ -1147,7 +1147,7 @@
   "gnetId": null,
   "graphTooltip": 0,
   "id": 9,
-  "iteration": 1766717800145,
+  "iteration": 1766743411864,
   "links": [],
   "panels": [
     {
@@ -1171,7 +1171,16 @@
           "color": {
             "mode": "thresholds"
           },
-          "mappings": [],
+          "mappings": [
+            {
+              "from": "",
+              "id": 1,
+              "text": "",
+              "to": "",
+              "type": 1
+            }
+          ],
+          "noValue": "0",
           "thresholds": {
             "mode": "absolute",
             "steps": [
@@ -1194,7 +1203,14 @@
             ]
           }
         },
-        "overrides": []
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName"
+            },
+            "properties": []
+          }
+        ]
       },
       "gridPos": {
         "h": 5,
@@ -1210,7 +1226,7 @@
         "orientation": "auto",
         "reduceOptions": {
           "calcs": [
-            "lastNotNull"
+            "last"
           ],
           "fields": "",
           "values": false
@@ -1304,14 +1320,14 @@
       "targets": [
         {
           "exemplar": true,
-          "expr": "avg_over_time(\r\n  sum(\r\n    {__name__=~\".*_http_client_requests_active\",application=~\"$application\"}\r\n  )[1h:]\r\n)",
+          "expr": "avg_over_time(\r\n  sum(\r\n    {__name__=~\".*_http_client_requests_active\",application=~\"$application\"}\r\n  )[$__range:]\r\n)",
           "instant": true,
           "interval": "",
           "legendFormat": "",
           "refId": "A"
         }
       ],
-      "title": "Average Concurrent (Last Hour)",
+      "title": "Average Concurrent",
       "transformations": [
         {
           "id": "organize",
@@ -1395,7 +1411,7 @@
       "targets": [
         {
           "exemplar": true,
-          "expr": "max_over_time(\r\n  sum(\r\n   {__name__=~\".*_http_client_requests_active\",application=~\"$application\"}\r\n  )[1h:]\r\n)",
+          "expr": "max_over_time(\r\n  sum(\r\n   {__name__=~\".*_http_client_requests_active\",application=~\"$application\"}\r\n  )[$__range:]\r\n)",
           "format": "table",
           "instant": true,
           "interval": "",
@@ -1403,7 +1419,7 @@
           "refId": "A"
         }
       ],
-      "title": "Peak Concurrent (Last Hour)",
+      "title": "Peak Concurrent",
       "transformations": [
         {
           "id": "organize",
@@ -1570,7 +1586,32 @@
           },
           "unit": "reqps"
         },
-        "overrides": []
+        "overrides": [
+          {
+            "__systemRef": "hideSeriesFrom",
+            "matcher": {
+              "id": "byNames",
+              "options": {
+                "mode": "exclude",
+                "names": [
+                  "GET/fbbfap/api/external/metric/failed"
+                ],
+                "prefix": "All except:",
+                "readOnly": true
+              }
+            },
+            "properties": [
+              {
+                "id": "custom.hideFrom",
+                "value": {
+                  "graph": true,
+                  "legend": false,
+                  "tooltip": false
+                }
+              }
+            ]
+          }
+        ]
       },
       "gridPos": {
         "h": 14,
@@ -1656,7 +1697,7 @@
       "targets": [
         {
           "exemplar": true,
-          "expr": "topk(\r\n  5,\r\n  max_over_time(\r\n    sum by (uri, method) (\r\n      {__name__=~\".*_http_client_requests_active_per_api\",method=~\"$method\",uri=~\"$uri\",application=~\"$application\"}\r\n    )[1h:]\r\n  )\r\n)\r\n",
+          "expr": "topk(\r\n  5,\r\n  max_over_time(\r\n    sum by (uri, method) (\r\n      {__name__=~\".*_http_client_requests_active_per_api\",method=~\"$method\",uri=~\"$uri\",application=~\"$application\"}\r\n    )[$__range:]\r\n  )\r\n)\r\n",
           "format": "table",
           "instant": true,
           "interval": "",
@@ -1732,7 +1773,20 @@
             ]
           }
         },
-        "overrides": []
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "uri"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 227
+              }
+            ]
+          }
+        ]
       },
       "gridPos": {
         "h": 4,
@@ -1742,7 +1796,8 @@
       },
       "id": 16,
       "options": {
-        "showHeader": true
+        "showHeader": true,
+        "sortBy": []
       },
       "pluginVersion": "7.5.17",
       "targets": [
@@ -1757,7 +1812,7 @@
         },
         {
           "exemplar": true,
-          "expr": "max_over_time(\r\n  sum by(uri,method)(\r\n   {__name__=~\".*_http_client_requests_active_per_api\",method=~\"$method\",uri=~\"$uri\",application=~\"$application\"}\r\n  )[1h:]\r\n)",
+          "expr": "max_over_time(\r\n  sum by(uri,method)(\r\n   {__name__=~\".*_http_client_requests_active_per_api\",method=~\"$method\",uri=~\"$uri\",application=~\"$application\"}\r\n  )[$__range:]\r\n)",
           "format": "table",
           "hide": false,
           "instant": true,
@@ -1767,7 +1822,7 @@
         },
         {
           "exemplar": true,
-          "expr": "avg_over_time(\r\n  sum by(uri,method)(\r\n    {__name__=~\".*_http_client_requests_active_per_api\",method=~\"$method\",uri=~\"$uri\",application=~\"$application\"}\r\n  )[1h:]\r\n)",
+          "expr": "avg_over_time(\r\n  sum by(uri,method)(\r\n{__name__=~\".*_http_client_requests_active_per_api\",method=~\"$method\",uri=~\"$uri\",application=~\"$application\"}\r\n  )[$__range:]\r\n)",
           "format": "table",
           "hide": false,
           "instant": true,
@@ -1799,9 +1854,9 @@
               "uri": 1
             },
             "renameByName": {
-              "Value #avg": "Average Concurrent (1h) ",
+              "Value #avg": "Average Concurrent",
               "Value #current active": "Current Active",
-              "Value #max": "Max Concurrent (1h)",
+              "Value #max": "Max Concurrent",
               "uri": ""
             }
           }
@@ -1810,7 +1865,7 @@
       "type": "table"
     },
     {
-      "datasource": null,
+      "datasource": "${Datasource}",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -1851,7 +1906,7 @@
       "targets": [
         {
           "exemplar": true,
-          "expr": "topk(\r\n  10,\r\n  avg_over_time(\r\n    sum by (uri, method)(\r\n      {__name__=~\".*_http_client_requests_active_per_api\",method=~\"$method\",uri=~\"$uri\",application=~\"$application\"}\r\n    )[1h:]\r\n  )\r\n)\r\n",
+          "expr": "topk(\r\n  10,\r\n  avg_over_time(\r\n    sum by (uri, method)(\r\n{__name__=~\".*_http_client_requests_active_per_api\",method=~\"$method\",uri=~\"$uri\",application=~\"$application\"}\r\n    )[$__range:]\r\n  )\r\n)\r\n",
           "format": "table",
           "instant": true,
           "interval": "",
@@ -1859,7 +1914,7 @@
           "refId": "A"
         }
       ],
-      "title": "Top 10 APIs by Average Concurrent Requests (Avg 1h)",
+      "title": "Top 10 APIs by Average Concurrent Requests",
       "transformations": [
         {
           "id": "merge",
@@ -1881,7 +1936,7 @@
       "type": "table"
     },
     {
-      "datasource": null,
+      "datasource": "${Datasource}",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -1922,7 +1977,7 @@
       "targets": [
         {
           "exemplar": true,
-          "expr": "topk(\r\n  10,\r\n  max_over_time(\r\n    sum by (uri, method)(\r\n      {__name__=~\".*_http_client_requests_active_per_api\",method=~\"$method\",uri=~\"$uri\",application=~\"$application\"}\r\n    )[1h:]\r\n  )\r\n)",
+          "expr": "topk(\r\n  10,\r\n  max_over_time(\r\n    sum by (uri, method)(\r\n      {__name__=~\".*_http_client_requests_active_per_api\",method=~\"$method\",uri=~\"$uri\",application=~\"$application\"}\r\n    )[$__range:]\r\n  )\r\n)",
           "format": "table",
           "instant": true,
           "interval": "",
@@ -1930,7 +1985,7 @@
           "refId": "A"
         }
       ],
-      "title": "Top 10 APIs by Peak Concurrent Requests (Max 1h)",
+      "title": "Top 10 APIs by Peak Concurrent Requests",
       "transformations": [
         {
           "id": "merge",
@@ -2038,12 +2093,12 @@
         "name": "method",
         "options": [
           {
-            "selected": false,
+            "selected": true,
             "text": "All",
             "value": "$__all"
           },
           {
-            "selected": true,
+            "selected": false,
             "text": "GET",
             "value": "GET"
           }
@@ -2131,7 +2186,7 @@
     ]
   },
   "time": {
-    "from": "now-1h",
+    "from": "now-12h",
     "to": "now"
   },
   "timepicker": {
@@ -2146,5 +2201,5 @@
   "timezone": "",
   "title": "Concurrent Http Client",
   "uid": "luCcbn7vk",
-  "version": 57
+  "version": 66
 }
