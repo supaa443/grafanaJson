@@ -163,14 +163,14 @@
       "targets": [
         {
           "exemplar": true,
-          "expr": "executor_pool_utilization{executor=\"provisioning\"}",
+          "expr": "executor_pool_utilization{executor=\"provisioning\",application=~\"$application\"}",
           "interval": "",
           "legendFormat": "{{executor}}",
           "refId": "A"
         },
         {
           "exemplar": true,
-          "expr": "executor_pool_utilization{executor=\"async_provisioning\"}",
+          "expr": "executor_pool_utilization{executor=\"async_provisioning\",application=~\"$application\"}",
           "hide": false,
           "interval": "",
           "legendFormat": "{{executor}}",
@@ -178,7 +178,7 @@
         },
         {
           "exemplar": true,
-          "expr": "executor_pool_utilization{executor=\"dependency_loader\"}",
+          "expr": "executor_pool_utilization{executor=\"dependency_loader\",application=~\"$application\"}",
           "hide": false,
           "interval": "",
           "legendFormat": "{{executor}}",
@@ -186,7 +186,7 @@
         },
         {
           "exemplar": true,
-          "expr": "executor_pool_utilization{executor=\"http_client\"}",
+          "expr": "executor_pool_utilization{executor=\"http_client\",application=~\"$application\"}",
           "hide": false,
           "interval": "",
           "legendFormat": "{{executor}}",
@@ -288,6 +288,93 @@
       "fieldConfig": {
         "defaults": {
           "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "red",
+                "value": null
+              },
+              {
+                "color": "yellow",
+                "value": 10
+              },
+              {
+                "color": "green",
+                "value": 20
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 24,
+        "x": 0,
+        "y": 24
+      },
+      "id": 19,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "text": {},
+        "textMode": "auto"
+      },
+      "pluginVersion": "7.5.17",
+      "targets": [
+        {
+          "exemplar": true,
+          "expr": "executor_queue_remaining{application=~\"$application\",executor=\"async_provisioning\",}",
+          "interval": "",
+          "legendFormat": "{{executor}}",
+          "refId": "A"
+        },
+        {
+          "exemplar": true,
+          "expr": "executor_queue_remaining{application=~\"$application\",executor=\"http_client\",}  ",
+          "hide": false,
+          "interval": "",
+          "legendFormat": "{{executor}}",
+          "refId": "B"
+        },
+        {
+          "exemplar": true,
+          "expr": "executor_queue_remaining{application=~\"$application\",executor=\"provisioning\",}  ",
+          "hide": false,
+          "interval": "",
+          "legendFormat": "{{executor}}",
+          "refId": "C"
+        },
+        {
+          "exemplar": true,
+          "expr": "executor_queue_remaining{application=~\"$application\",executor=\"dependency_loader\"}  ",
+          "hide": false,
+          "interval": "",
+          "legendFormat": "{{executor}}",
+          "refId": "D"
+        }
+      ],
+      "title": "Queue Remaining",
+      "type": "stat"
+    },
+    {
+      "datasource": "${datasource}",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
             "mode": "palette-classic"
           },
           "custom": {
@@ -333,7 +420,7 @@
         "h": 14,
         "w": 24,
         "x": 0,
-        "y": 24
+        "y": 30
       },
       "id": 8,
       "options": {
@@ -426,7 +513,7 @@
         "h": 14,
         "w": 24,
         "x": 0,
-        "y": 38
+        "y": 44
       },
       "id": 10,
       "options": {
@@ -478,7 +565,7 @@
         "h": 6,
         "w": 4,
         "x": 0,
-        "y": 52
+        "y": 58
       },
       "id": 12,
       "options": {
@@ -535,7 +622,7 @@
         "h": 6,
         "w": 4,
         "x": 4,
-        "y": 52
+        "y": 58
       },
       "id": 13,
       "options": {
@@ -592,7 +679,7 @@
         "h": 6,
         "w": 4,
         "x": 8,
-        "y": 52
+        "y": 58
       },
       "id": 14,
       "options": {
@@ -649,7 +736,7 @@
         "h": 6,
         "w": 4,
         "x": 12,
-        "y": 52
+        "y": 58
       },
       "id": 15,
       "options": {
@@ -706,7 +793,7 @@
         "h": 6,
         "w": 4,
         "x": 16,
-        "y": 52
+        "y": 58
       },
       "id": 16,
       "options": {
@@ -763,7 +850,7 @@
         "h": 6,
         "w": 4,
         "x": 20,
-        "y": 52
+        "y": 58
       },
       "id": 17,
       "options": {
@@ -930,5 +1017,5 @@
   "timezone": "",
   "title": "Executor Metrics Dashboard",
   "uid": "rrrFNd7vk",
-  "version": 15
+  "version": 20
 }
